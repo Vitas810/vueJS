@@ -37,18 +37,33 @@ export default {
             favoritesCountOptimistic: this.favoritesCount
         }
     },
+    watch: {
+        isFavorited(value) {
+            this.isFavoritesOptimistic = value
+        },
+        favoritesCount(value) {
+            this.favoritesCountOptimistic = value
+        }
+    },
     methods: {
         handleLike() {
-            this.$store.dispatch(actionTypes.addToFavorites, {
-                slug: this.articleSlug,
-                isFavorited: this.isFavoritesOptimistic
-            })
-            if (this.isFavoritesOptimistic) {
-                this.favoritesCountOptimistic = this.favoritesCountOptimistic - 1
-            } else {
-                this.favoritesCountOptimistic = this.favoritesCountOptimistic + 1
-            }
-            this.isFavoritesOptimistic = !this.isFavoritesOptimistic
+            const previousFavorited = this.isFavoritesOptimistic
+            const previousCount = this.favoritesCountOptimistic
+            this.$store
+                .dispatch(actionTypes.addToFavorites, {
+                    slug: this.articleSlug,
+                    isFavorited: previousFavorited
+                })
+                .then(article => {
+                    if (article) {
+                        this.isFavoritesOptimistic = article.favorited
+                        this.favoritesCountOptimistic = article.favoritesCount
+                    }
+                })
+                .catch(() => {
+                    this.isFavoritesOptimistic = previousFavorited
+                    this.favoritesCountOptimistic = previousCount
+                })
         }
     }
 }

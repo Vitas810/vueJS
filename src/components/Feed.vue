@@ -1,13 +1,13 @@
 <template>
   <div>
     <mcv-loading v-if="isLoading" />
-    <mcv-error-message v-if="error" />
+    <mcv-error-message v-if="error" :message="error" />
 
     <div v-if="feed">
       <div
         class="article-preview"
-        v-for="(article, index) in feed.articles"
-        :key="index"
+        v-for="article in feed.articles"
+        :key="article.slug"
       >
         <div class="article-meta">
           <router-link
@@ -61,7 +61,7 @@ import {mapState} from 'vuex'
 import {actionTypes} from '@/store/modules/feed'
 import McvPagination from '@/components/Pagination'
 import {limit} from '@/helpers/vars'
-import {stringify, parseUrl} from 'query-string'
+import {buildFeedApiUrl} from '@/helpers/feedApiUrl'
 import McvLoading from '@/components/Loading'
 import McvErrorMessage from "@/components/ErrorMessage";
 import McvTagList from "@/components/Taglist";
@@ -72,7 +72,7 @@ export default {
   props: {
     apiUrl: {
       type: String,
-      require: true,
+      required: true,
     },
   },
   components: {
@@ -85,7 +85,6 @@ export default {
   data() {
     return {
       limit,
-      url: '/tags/dragons',
     }
   },
   computed: {
@@ -99,9 +98,6 @@ export default {
     },
     baseUrl() {
       return this.$route.path
-    },
-    offset() {
-      return this.currentPage * limit - limit
     },
   },
   watch: {
@@ -117,13 +113,7 @@ export default {
   },
   methods: {
     fetchFeed() {
-      const parsedUrl = parseUrl(this.apiUrl)
-      const stringifieldParams = stringify({
-        limit,
-        offset: this.offset,
-        ...parsedUrl.query,
-      })
-      const apiUrlWithParams = `${parsedUrl.url}?${stringifieldParams}`
+      const apiUrlWithParams = buildFeedApiUrl(this.apiUrl, this.currentPage)
       this.$store.dispatch(actionTypes.getFeed, {apiUrl: apiUrlWithParams})
     },
   },

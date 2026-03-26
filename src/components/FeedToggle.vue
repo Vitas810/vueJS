@@ -18,7 +18,7 @@
                 </router-link>
             </li>
             <li class="nav-item" v-if="tagName">
-                <router-link :to="{name: 'tag'}"
+                <router-link :to="{name: 'tag', params: { slug: tagName }}"
                              class="nav-link"
                              :class="{active: routeName === 'tag'}"
                 >

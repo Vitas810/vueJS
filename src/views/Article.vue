@@ -30,7 +30,7 @@
        </div>
         <div class="container page">
             <mcv-loading v-if="isLoading" />
-            <mcv-error-message v-if="error" />
+            <mcv-error-message v-if="error" :message="error" />
             <div class="row article-content" v-if="article">
                 <div class="col-xs-12">
                     <div>
@@ -72,6 +72,13 @@ export default {
     },
     mounted() {
         this.$store.dispatch(articleActionTypes.getArticle, {slug: this.$route.params.slug})
+    },
+    watch: {
+        '$route.params.slug'(slug) {
+            if (slug) {
+                this.$store.dispatch(articleActionTypes.getArticle, {slug})
+            }
+        }
     },
     methods: {
         deleteArticle() {

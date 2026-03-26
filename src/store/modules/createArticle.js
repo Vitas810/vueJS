@@ -28,9 +28,21 @@ const mutations = {
     }
 }
 
+const getArticleErrorsFromResponse = error => {
+    if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.errors
+    ) {
+        return error.response.data.errors
+    }
+    return null
+}
+
 const actions = {
     [actionTypes.createArticle](context, {articleInput}) {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             context.commit(mutationTypes.createArticleStart)
             articleApi
                 .createArticle(articleInput)
@@ -38,11 +50,12 @@ const actions = {
                     context.commit(mutationTypes.createArticleSuccess, article)
                     resolve(article)
                 })
-                .catch(result => {
+                .catch(error => {
                     context.commit(
                         mutationTypes.createArticleFailure,
-                        result.response.data.errors
+                        getArticleErrorsFromResponse(error)
                     )
+                    reject(error)
                 })
         })
     }

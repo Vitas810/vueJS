@@ -20,19 +20,22 @@ const mutations = {
     [mutationTypes.getUserProfileStart](state) {
         state.isLoading = true
         state.data = null
+        state.error = null
     },
     [mutationTypes.getUserProfileSuccess](state, payload) {
         state.isLoading = false
         state.data = payload
+        state.error = null
     },
-    [mutationTypes.getUserProfileFailure](state) {
+    [mutationTypes.getUserProfileFailure](state, payload) {
         state.isLoading = false
+        state.error = payload
     },
 }
 
 const actions = {
     [actionTypes.getUserProfile](context, {slug}) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             context.commit(mutationTypes.getUserProfileStart)
             userProfileApi
                 .getUserProfile(slug)
@@ -40,8 +43,13 @@ const actions = {
                     context.commit(mutationTypes.getUserProfileSuccess, userProfile)
                     resolve(userProfile)
                 })
-                .catch(() => {
-                    context.commit(mutationTypes.getUserProfileFailure)
+                .catch((error) => {
+                    const message =
+                        error && error.message
+                            ? error.message
+                            : 'Failed to load profile'
+                    context.commit(mutationTypes.getUserProfileFailure, message)
+                    reject(error)
                 })
         })
     },

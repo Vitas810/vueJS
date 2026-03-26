@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 col-md-10 offset-md-1">
-                        <img class="user-img" :src="userProfile.img" alt="user photo" />
+                        <img class="user-img" :src="userProfile.image" alt="user photo" />
                         <h4>{{userProfile.username}}</h4>
                         <p>{{userProfile.bio}}</p>
                         <div>
@@ -28,7 +28,7 @@
                                 <router-link
                                     :to="{
                                         name: 'userProfile',
-                                        slug: userProfile.username
+                                        params: { slug: userProfile.username }
                                     }"
                                     class="nav-link"
                                     :class="{'active': routeName === 'userProfile'}"
@@ -40,7 +40,7 @@
                                 <router-link
                                     :to="{
                                         name: 'userProfileFavorites',
-                                        slug: userProfile.username
+                                        params: { slug: userProfile.username }
                                     }"
                                     class="nav-link"
                                     :class="{'active': routeName === 'userProfileFavorites'}"

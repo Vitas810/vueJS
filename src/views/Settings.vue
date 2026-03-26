@@ -97,7 +97,7 @@ export default {
         },
         logout() {
           this.$store.dispatch(authActionTypes.logout).then(() => {
-              this.$router.push({name: 'globalFeed'})
+              this.$router.push({name: 'globalfeed'})
           })
         }
     }
