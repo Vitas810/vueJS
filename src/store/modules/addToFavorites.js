@@ -18,7 +18,7 @@ const mutations = {
 
 const actions = {
     [actionTypes.addToFavorites](context, {slug, isFavorited}) {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             context.commit(mutationsTypes.addToFavoritesStart)
             const promise = isFavorited
                 ? addToFavoritesApi.removeFromFavorites(slug)
@@ -29,8 +29,9 @@ const actions = {
                     context.commit(mutationsTypes.addToFavoritesSuccess, article)
                     resolve(article)
                 })
-                .catch(() => {
+                .catch(error => {
                     context.commit(mutationsTypes.addToFavoritesFailure)
+                    reject(error)
                 })
         })
     }

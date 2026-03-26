@@ -1,7 +1,7 @@
 <template>
   <div>
     <mcv-loading v-if="isLoading" />
-    <mcv-error-message v-if="error"/>
+    <mcv-error-message v-if="error" :message="error" />
 
     <div class="sidebar" v-if="popularTags">
       <p>Popular Tags</p>

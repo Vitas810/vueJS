@@ -25,23 +25,34 @@ const mutations = {
     [mutationTypes.getArticleStart](state) {
         state.isLoading = true
         state.data = null
+        state.error = null
     },
     [mutationTypes.getArticleSuccess](state, payload) {
         state.isLoading = false
         state.data = payload
+        state.error = null
     },
-    [mutationTypes.getArticleFailure](state) {
+    [mutationTypes.getArticleFailure](state, payload) {
         state.isLoading = false
+        state.error = payload
     },
 
-    [mutationTypes.deleteArticleStart]() {},
-    [mutationTypes.deleteArticleSuccess]() {},
-    [mutationTypes.deleteArticleFailure]() {},
+    [mutationTypes.deleteArticleStart](state) {
+        state.error = null
+    },
+    [mutationTypes.deleteArticleSuccess](state) {
+        state.isLoading = false
+        state.data = null
+        state.error = null
+    },
+    [mutationTypes.deleteArticleFailure](state) {
+        state.isLoading = false
+    },
 }
 
 const actions = {
     [actionTypes.getArticle](context, {slug}) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             context.commit(mutationTypes.getArticleStart, slug)
             getArticleAPi
                 .getArticle(slug)
@@ -49,22 +60,28 @@ const actions = {
                     context.commit(mutationTypes.getArticleSuccess, article)
                     resolve(article)
                 })
-                .catch(() => {
-                    context.commit(mutationTypes.getArticleFailure)
+                .catch((error) => {
+                    const message =
+                        error && error.message
+                            ? error.message
+                            : 'Failed to load article'
+                    context.commit(mutationTypes.getArticleFailure, message)
+                    reject(error)
                 })
         })
     },
     [actionTypes.deleteArticle](context, {slug}) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             context.commit(mutationTypes.deleteArticleStart, slug)
             getArticleAPi
                 .deleteArticle(slug)
                 .then(() => {
-                    context.commit(mutationTypes.getArticleSuccess)
+                    context.commit(mutationTypes.deleteArticleSuccess)
                     resolve()
                 })
-                .catch(() => {
+                .catch((error) => {
                     context.commit(mutationTypes.deleteArticleFailure)
+                    reject(error)
                 })
         })
     },

@@ -11,8 +11,8 @@
         name: 'McvTagList',
         props: {
             tags: {
-                tags: Array,
-                require: true
+                type: Array,
+                required: true
             }
         }
     }

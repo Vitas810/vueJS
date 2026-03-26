@@ -20,19 +20,22 @@ const mutations = {
     [mutationTypes.getPopularTagsStart](state) {
         state.isLoading = true
         state.data = null
+        state.error = null
     },
     [mutationTypes.getPopularTagsSuccess](state, payload) {
         state.isLoading = false
         state.data = payload
+        state.error = null
     },
-    [mutationTypes.getPopularTagsFailure](state) {
+    [mutationTypes.getPopularTagsFailure](state, payload) {
         state.isLoading = false
+        state.error = payload
     },
 }
 
 const actions = {
     [actionTypes.getPopularTags](context) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             context.commit(mutationTypes.getPopularTagsStart)
             popularTagsApi
                 .getPopularTags()
@@ -40,8 +43,13 @@ const actions = {
                     context.commit(mutationTypes.getPopularTagsSuccess, tags)
                     resolve(tags)
                 })
-                .catch(() => {
-                    context.commit(mutationTypes.getPopularTagsFailure)
+                .catch((error) => {
+                    const message =
+                        error && error.message
+                            ? error.message
+                            : 'Failed to load tags'
+                    context.commit(mutationTypes.getPopularTagsFailure, message)
+                    reject(error)
                 })
         })
     },

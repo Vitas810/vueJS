@@ -1,5 +1,6 @@
 import authApi from '@/api/auth'
 import {setItem} from '@/helpers/persistanceStorage'
+import {mutationTypes as settingsMutationTypes} from '@/store/modules/settings'
 
 const state = {
   isLoading: false,
@@ -108,9 +109,21 @@ const mutations = {
   }
 }
 
+const getValidationErrorsFromAuthError = error => {
+  if (
+    error &&
+    error.response &&
+    error.response.data &&
+    error.response.data.errors
+  ) {
+    return error.response.data.errors
+  }
+  return null
+}
+
 const actions = {
   [actionsTypes.register](context, credentials) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       context.commit(mutationsTypes.registerStart)
       authApi
         .register(credentials)
@@ -119,18 +132,18 @@ const actions = {
           setItem('accessToken', response.data.user.token)
           resolve(response.data.user)
         })
-        .catch((result) => {
+        .catch((error) => {
           context.commit(
             mutationsTypes.registerFailure,
-            result.response.data.errors
+            getValidationErrorsFromAuthError(error)
           )
-          console.log('result errors', result)
+          reject(error)
         })
     })
   },
 
   [actionsTypes.login](context, credentials) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       context.commit(mutationsTypes.loginStart)
       authApi
         .login(credentials)
@@ -139,17 +152,17 @@ const actions = {
           setItem('accessToken', response.data.user.token)
           resolve(response.data.user)
         })
-        .catch((result) => {
+        .catch((error) => {
           context.commit(
             mutationsTypes.loginFailure,
-            result.response.data.errors
+            getValidationErrorsFromAuthError(error)
           )
-          console.log('result errors', result)
+          reject(error)
         })
     })
   },
   [actionsTypes.getCurrentUser](context) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       context.commit(mutationsTypes.getCurrentUserStart)
       authApi
         .getCurrentUser()
@@ -160,14 +173,16 @@ const actions = {
           )
           resolve(response.data.user)
         })
-        .catch(() => {
+        .catch((error) => {
           context.commit(mutationsTypes.getCurrentUserFailure)
+          reject(error)
         })
     })
   },
   [actionsTypes.updateCurrentUser](context, {currentUserInput}) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       context.commit(mutationsTypes.updateCurrentUserStart)
+      context.commit(settingsMutationTypes.updateSettingsFormStart)
       authApi
           .updateCurrentUser(currentUserInput)
           .then((user) => {
@@ -175,10 +190,17 @@ const actions = {
                 mutationsTypes.updateCurrentUserSuccess,
                 user
             )
+            context.commit(settingsMutationTypes.updateSettingsFormSuccess)
             resolve(user)
           })
-          .catch((result) => {
-            context.commit(mutationsTypes.updateCurrentUserFailure, result.response.data.errors)
+          .catch((error) => {
+            const validationErrors = getValidationErrorsFromAuthError(error)
+            context.commit(mutationsTypes.updateCurrentUserFailure)
+            context.commit(
+              settingsMutationTypes.updateSettingsFormFailure,
+              validationErrors
+            )
+            reject(error)
           })
     })
   },

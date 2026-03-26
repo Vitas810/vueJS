@@ -1,5 +1,4 @@
 import feedApi from '@/api/feed'
-import {Promise} from 'core-js'
 
 const state = {
   data: null,
@@ -21,19 +20,22 @@ const mutations = {
   [mutationTypes.getFeedStart](state) {
     state.isLoading = true
     state.data = null
+    state.error = null
   },
   [mutationTypes.getFeedSuccess](state, payload) {
     state.isLoading = false
     state.data = payload
+    state.error = null
   },
-  [mutationTypes.getFeedFailure](state) {
+  [mutationTypes.getFeedFailure](state, payload) {
     state.isLoading = false
+    state.error = payload
   },
 }
 
 const actions = {
   [actionTypes.getFeed](context, {apiUrl}) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       context.commit(mutationTypes.getFeedStart)
       feedApi
         .getFeed(apiUrl)
@@ -41,8 +43,11 @@ const actions = {
           context.commit(mutationTypes.getFeedSuccess, response.data)
           resolve(response.data)
         })
-        .catch(() => {
-          context.commit(mutationTypes.getFeedFailure)
+        .catch((error) => {
+          const message =
+            error && error.message ? error.message : 'Failed to load feed'
+          context.commit(mutationTypes.getFeedFailure, message)
+          reject(error)
         })
     })
   },

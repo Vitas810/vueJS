@@ -23,19 +23,19 @@ export default {
     props: {
         total: {
             type: Number,
-            require: true
+            required: true
         },
         limit: {
             type: Number,
-            require: true
+            required: true
         },
         currentPage: {
             type: Number,
-            require: true
+            required: true
         },
         url: {
             type: String,
-            require: true
+            required: true
         }
     },
     computed: {

@@ -8,7 +8,7 @@ export default {
   props: {
     message: {
       type: String,
-      require: false,
+      required: false,
       default: 'Something went wrong',
     },
   },
