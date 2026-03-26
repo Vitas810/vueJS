@@ -2,8 +2,10 @@
   <div>{{ message }}</div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+
+export default Vue.extend({
   name: 'McvErrorMessage',
   props: {
     message: {
@@ -12,5 +14,5 @@ export default {
       default: 'Something went wrong',
     },
   },
-}
+})
 </script>

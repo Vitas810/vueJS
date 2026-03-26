@@ -46,39 +46,52 @@
   </div>
 </template>
 
-<script>
-import McvValidationErrors from '@/components/ValidationErrors'
-import {actionsTypes} from '@/store/modules/auth'
-import {mapState} from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import McvValidationErrors from '@/components/ValidationErrors.vue'
+import { actionsTypes } from '@/store/modules/auth'
+import { CurrentUser, ValidationErrors } from '@/types/domain'
+import { RootState } from '@/types/store'
 
-export default {
+interface LoginData {
+  email: string
+  password: string
+}
+
+export default Vue.extend({
   name: 'McvLogin',
   components: {
     McvValidationErrors,
   },
-  data() {
+  data(): LoginData {
     return {
       email: '',
       password: '',
     }
   },
   computed: {
-    ...mapState({
-      isSubmiting: (state) => state.auth.isSubmiting,
-      validationErrors: (state) => state.auth.validationErrors,
-    }),
-  },
-  methods: {
-    onSubmit() {
-      this.$store
-        .dispatch(actionsTypes.login, {
-          email: this.email,
-          password: this.password,
-        })
-        .then(() => {
-          this.$router.push({name: 'globalfeed'})
-        })
+    // Флаг отправки формы
+    isSubmiting(): boolean {
+      return (this.$store.state as RootState).auth.isSubmiting
+    },
+
+    // Ошибки валидации
+    validationErrors(): ValidationErrors | null {
+      return (this.$store.state as RootState).auth.validationErrors
     },
   },
-}
+  methods: {
+    // Отправка формы логина
+    onSubmit(): void {
+      const loginPromise = this.$store.dispatch(actionsTypes.login, {
+        email: this.email,
+        password: this.password,
+      }) as Promise<CurrentUser>
+
+      loginPromise.then(() => {
+        this.$router.push({ name: 'globalfeed' })
+      })
+    },
+  },
+})
 </script>

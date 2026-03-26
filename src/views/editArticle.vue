@@ -12,52 +12,91 @@
     </div>
 </template>
 
-<script>
-import {mapState} from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import McvArticleForm from '@/components/ArticleForm.vue'
+import McvLoading from '@/components/Loading.vue'
+import { actionTypes } from '@/store/modules/editArticle'
+import {
+  Article,
+  ArticleFormValues,
+  ValidationErrors,
+} from '@/types/domain'
+import { RootState } from '@/types/store'
 
-import McvArticleForm from '@/components/ArticleForm'
-import McvLoading from '@/components/Loading'
-import {actionTypes} from '@/store/modules/editArticle'
+export default Vue.extend({
+  name: 'McvEditArticle',
+  components: {
+    McvArticleForm,
+    McvLoading,
+  },
+  computed: {
+    // slug активной статьи
+    articleSlug(): string {
+      return String(this.$route.params.slug ?? '')
+    },
 
-export default {
-    name: 'McvEditArticle',
-    components: {
-        McvArticleForm,
-        McvLoading
+    // Флаг загрузки статьи
+    isLoading(): boolean {
+      return (this.$store.state as RootState).editArticle.isLoading
     },
-    computed: {
-        ...mapState({
-            isLoading: state => state.editArticle.isLoading,
-            article: state => state.editArticle.article,
-            isSubmitting: state => state.editArticle.isSubmitting,
-            validationErrors: state => state.editArticle.validationErrors
-        }),
-        initialValues() {
-            if (!this.article) {
-                return null
-            }
-            return {
-                title: this.article.title,
-                description: this.article.description,
-                body: this.article.body,
-                tagList: this.article.tagList
-            }
-        }
+
+    // Текущая статья
+    article(): Article | null {
+      return (this.$store.state as RootState).editArticle.article
     },
-    mounted() {
-        this.$store.dispatch(actionTypes.getArticle, {
-            slug: this.$route.params.slug
-        })
+
+    // Флаг отправки формы
+    isSubmitting(): boolean {
+      return (this.$store.state as RootState).editArticle.isSubmitting
     },
-    methods: {
-        onSubmit(articleInput) {
-            const slug = this.$route.params.slug
-            this.$store
-                .dispatch(actionTypes.updateArticle, {articleInput, slug})
-                .then(article => {
-                    this.$router.push({name: 'article', params: {slug: article.slug}})
-                })
-        }
-    }
-}
+
+    // Ошибки валидации
+    validationErrors(): ValidationErrors | null {
+      return (this.$store.state as RootState).editArticle.validationErrors
+    },
+
+    // Начальные значения формы
+    initialValues(): ArticleFormValues | null {
+      if (!this.article) {
+        return null
+      }
+
+      return {
+        title: this.article.title,
+        description: this.article.description,
+        body: this.article.body,
+        tagList: [...this.article.tagList],
+      }
+    },
+  },
+  watch: {
+    articleSlug(): void {
+      this.fetchArticle()
+    },
+  },
+  mounted() {
+    this.fetchArticle()
+  },
+  methods: {
+    // Загрузка статьи для редактирования
+    fetchArticle(): void {
+      this.$store.dispatch(actionTypes.getArticle, {
+        slug: this.articleSlug,
+      })
+    },
+
+    // Обновление статьи
+    onSubmit(articleInput: ArticleFormValues): void {
+      const updatePromise = this.$store.dispatch(actionTypes.updateArticle, {
+        articleInput,
+        slug: this.articleSlug,
+      }) as Promise<Article>
+
+      updatePromise.then((article) => {
+        this.$router.push({ name: 'article', params: { slug: article.slug } })
+      })
+    },
+  },
+})
 </script>

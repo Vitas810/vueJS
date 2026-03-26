@@ -30,25 +30,29 @@
     </div>
 </template>
 
-<script>
-import {mapGetters} from "vuex";
-import {getterTypes} from "@/store/modules/auth";
+<script lang="ts">
+import Vue from 'vue'
+import { getterTypes } from '@/store/modules/auth'
 
-export default {
-    name: 'McvFeedToggle',
-    props: {
-        tagName: {
-            type: String,
-            required: false
-        }
+export default Vue.extend({
+  name: 'McvFeedToggle',
+  props: {
+    tagName: {
+      type: String,
+      required: false,
+      default: '',
     },
-    computed: {
-        ...mapGetters({
-            isLoggedIn: getterTypes.isLoggedIn
-        }),
-        routeName() {
-            return this.$route.name
-        },
+  },
+  computed: {
+    // Флаг авторизации
+    isLoggedIn(): boolean {
+      return this.$store.getters[getterTypes.isLoggedIn] as boolean
     },
-}
+
+    // Имя текущего маршрута
+    routeName(): string {
+      return String(this.$route.name ?? '')
+    },
+  },
+})
 </script>

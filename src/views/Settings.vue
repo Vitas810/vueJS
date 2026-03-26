@@ -65,41 +65,96 @@
     </div>
 </template>
 
-<script>
-import {mapState, mapGetters} from "vuex";
-import {getterTypes as authGetterTypes, actionsTypes as authActionTypes} from "@/store/modules/auth";
-import McvValidationErrors from "@/components/ValidationErrors";
+<script lang="ts">
+import Vue from 'vue'
+import {
+  getterTypes as authGetterTypes,
+  actionsTypes as authActionTypes,
+} from '@/store/modules/auth'
+import McvValidationErrors from '@/components/ValidationErrors.vue'
+import {
+  CurrentUser,
+  CurrentUserInput,
+  ValidationErrors,
+} from '@/types/domain'
+import { RootState } from '@/types/store'
 
-export default {
-    name: 'McvSettings',
-    components: {McvValidationErrors},
-    computed: {
-        ...mapState({
-            isSubmitting: state => state.settings.isSubmitting,
-            validationErrors: state => state.settings.validationErrors
-        }),
-        ...mapGetters({
-            currentUser: authGetterTypes.currentUser
-        }),
-        form() {
-            return {
-                username: this.currentUser.username,
-                bio: this.currentUser.bio,
-                image: this.currentUser.image,
-                email: this.currentUser.email,
-                password: ''
-            }
-        }
-    },
-    methods: {
-        onSubmit() {
-            this.$store.dispatch(authActionTypes.updateCurrentUser, {currentUserInput: this.form})
-        },
-        logout() {
-          this.$store.dispatch(authActionTypes.logout).then(() => {
-              this.$router.push({name: 'globalfeed'})
-          })
-        }
-    }
+interface SettingsData {
+  form: CurrentUserInput
 }
+
+function createEmptySettingsForm(): CurrentUserInput {
+  return {
+    username: '',
+    bio: '',
+    image: '',
+    email: '',
+    password: '',
+  }
+}
+
+export default Vue.extend({
+  name: 'McvSettings',
+  components: { McvValidationErrors },
+  data(): SettingsData {
+    return {
+      form: createEmptySettingsForm(),
+    }
+  },
+  computed: {
+    // Флаг отправки формы
+    isSubmitting(): boolean {
+      return (this.$store.state as RootState).settings.isSubmitting
+    },
+
+    // Ошибки валидации формы
+    validationErrors(): ValidationErrors | null {
+      return (this.$store.state as RootState).settings.validationErrors
+    },
+
+    // Текущий пользователь
+    currentUser(): CurrentUser | null {
+      return this.$store.getters[authGetterTypes.currentUser] as CurrentUser | null
+    },
+  },
+  watch: {
+    // Синхронизация локальной формы без мутации store
+    currentUser: {
+      immediate: true,
+      handler(currentUser: CurrentUser | null): void {
+        if (!currentUser) {
+          this.form = createEmptySettingsForm()
+          return
+        }
+
+        this.form = {
+          username: currentUser.username,
+          bio: currentUser.bio ?? '',
+          image: currentUser.image ?? '',
+          email: currentUser.email,
+          password: '',
+        }
+      },
+    },
+  },
+  methods: {
+    // Отправка формы настроек
+    onSubmit(): void {
+      this.$store.dispatch(authActionTypes.updateCurrentUser, {
+        currentUserInput: { ...this.form },
+      })
+    },
+
+    // Выход пользователя
+    logout(): void {
+      const logoutPromise = this.$store.dispatch(
+        authActionTypes.logout
+      ) as Promise<void>
+
+      logoutPromise.then(() => {
+        this.$router.push({ name: 'globalfeed' })
+      })
+    },
+  },
+})
 </script>

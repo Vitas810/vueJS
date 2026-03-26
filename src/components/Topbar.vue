@@ -75,18 +75,28 @@
   </nav>
 </template>
 
-<script>
-import {mapGetters} from 'vuex'
-import {getterTypes} from '@/store/modules/auth'
+<script lang="ts">
+import Vue from 'vue'
+import { getterTypes } from '@/store/modules/auth'
+import { CurrentUser } from '@/types/domain'
 
-export default {
+export default Vue.extend({
   name: 'McvTopbar',
   computed: {
-    ...mapGetters({
-      currentUser: getterTypes.currentUser,
-      isLoggedIn: getterTypes.isLoggedIn,
-      isAnonymous: getterTypes.isAnonymous,
-    }),
+    // Текущий пользователь
+    currentUser(): CurrentUser | null {
+      return this.$store.getters[getterTypes.currentUser] as CurrentUser | null
+    },
+
+    // Флаг авторизованного пользователя
+    isLoggedIn(): boolean {
+      return this.$store.getters[getterTypes.isLoggedIn] as boolean
+    },
+
+    // Флаг гостя
+    isAnonymous(): boolean {
+      return this.$store.getters[getterTypes.isAnonymous] as boolean
+    },
   },
-}
+})
 </script>

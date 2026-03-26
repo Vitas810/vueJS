@@ -15,34 +15,37 @@
     </ul>
 </template>
 
-<script>
-import {range} from "@/helpers/utils";
+<script lang="ts">
+import Vue from 'vue'
+import { range } from '@/helpers/utils'
 
-export default {
-    name: 'McvPagination',
-    props: {
-        total: {
-            type: Number,
-            required: true
-        },
-        limit: {
-            type: Number,
-            required: true
-        },
-        currentPage: {
-            type: Number,
-            required: true
-        },
-        url: {
-            type: String,
-            required: true
-        }
+export default Vue.extend({
+  name: 'McvPagination',
+  props: {
+    total: {
+      type: Number,
+      required: true,
     },
-    computed: {
-        pages() {
-            const pagesCount = Math.ceil(this.total / this.limit)
-            return range(1, pagesCount)
-        }
-    }
-}
+    limit: {
+      type: Number,
+      required: true,
+    },
+    currentPage: {
+      type: Number,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
+  computed: {
+    // Список страниц для пагинации
+    pages(): number[] {
+      const pagesCount = Math.ceil(this.total / this.limit)
+
+      return range(1, pagesCount)
+    },
+  },
+})
 </script>

@@ -57,55 +57,81 @@
     </div>
 </template>
 
-<script>
-import {mapState, mapGetters} from "vuex";
-import {actionTypes as userProfileActionTypes} from "@/store/modules/userProfile";
-import {getterTypes as authGetterTypes} from "@/store/modules/auth";
-import McvFeed from "@/components/Feed";
+<script lang="ts">
+import Vue from 'vue'
+import { actionTypes as userProfileActionTypes } from '@/store/modules/userProfile'
+import { getterTypes as authGetterTypes } from '@/store/modules/auth'
+import McvFeed from '@/components/Feed.vue'
+import { CurrentUser, Profile } from '@/types/domain'
+import { RootState } from '@/types/store'
 
-export default {
-    name: 'McvUserProfile',
-    components: {McvFeed},
-    computed: {
-        ...mapState({
-            isLoading: state => state.userProfile.isLoading,
-            error: state => state.userProfile.error,
-            userProfile: state => state.userProfile.data
-        }),
-        ...mapGetters({
-            currentUser: authGetterTypes.currentUser
-        }),
-        isCurrentUserProfile() {
-            if (!this.currentUser || !this.userProfile) return false
-            return this.currentUser.username === this.userProfile.username
-        },
-        userProfileSlug() {
-            return this.$route.params.slug
-        },
-        apiUrl() {
-            const isFavorites = this.$route.path.includes('favorites')
-            return isFavorites
-                ? `/articles?favorited=${this.userProfileSlug}`
-                : `/articles?author=${this.userProfileSlug}`
-        },
-        routeName() {
-            return this.$route.name
-        }
+export default Vue.extend({
+  name: 'McvUserProfile',
+  components: { McvFeed },
+  computed: {
+    // Состояние загрузки профиля
+    isLoading(): boolean {
+      return (this.$store.state as RootState).userProfile.isLoading
     },
-    watch: {
-        userProfileSlug() {
-            this.getUserProfile()
-        }
+
+    // Ошибка профиля
+    error(): string | null {
+      return (this.$store.state as RootState).userProfile.error
     },
-    mounted() {
-        this.getUserProfile()
+
+    // Активный профиль
+    userProfile(): Profile | null {
+      return (this.$store.state as RootState).userProfile.data
     },
-    methods: {
-        getUserProfile() {
-            this.$store.dispatch(userProfileActionTypes.getUserProfile, {
-                slug: this.userProfileSlug
-            })
-        }
-    }
-}
+
+    // Текущий пользователь
+    currentUser(): CurrentUser | null {
+      return this.$store.getters[authGetterTypes.currentUser] as CurrentUser | null
+    },
+
+    // Проверка владельца профиля
+    isCurrentUserProfile(): boolean {
+      if (!this.currentUser || !this.userProfile) {
+        return false
+      }
+
+      return this.currentUser.username === this.userProfile.username
+    },
+
+    // slug профиля
+    userProfileSlug(): string {
+      return String(this.$route.params.slug ?? '')
+    },
+
+    // URL ленты профиля
+    apiUrl(): string {
+      const isFavorites = this.$route.path.includes('favorites')
+
+      return isFavorites
+        ? `/articles?favorited=${this.userProfileSlug}`
+        : `/articles?author=${this.userProfileSlug}`
+    },
+
+    // Имя текущего маршрута
+    routeName(): string {
+      return String(this.$route.name ?? '')
+    },
+  },
+  watch: {
+    userProfileSlug(): void {
+      this.getUserProfile()
+    },
+  },
+  mounted() {
+    this.getUserProfile()
+  },
+  methods: {
+    // Загрузка профиля пользователя
+    getUserProfile(): void {
+      this.$store.dispatch(userProfileActionTypes.getUserProfile, {
+        slug: this.userProfileSlug,
+      })
+    },
+  },
+})
 </script>

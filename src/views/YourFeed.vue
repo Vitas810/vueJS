@@ -15,24 +15,29 @@
   </div>
 </template>
 
-<script>
-import McvFeed from '@/components/Feed'
-import McvPopularTags from "@/components/PopularTags";
-import McvBanner from '@/components/Banner'
-import McvFeedToggle from '@/components/FeedToggle'
+<script lang="ts">
+import Vue from 'vue'
+import McvFeed from '@/components/Feed.vue'
+import McvPopularTags from '@/components/PopularTags.vue'
+import McvBanner from '@/components/Banner.vue'
+import McvFeedToggle from '@/components/FeedToggle.vue'
 
-export default {
+interface YourFeedData {
+  apiUrl: string
+}
+
+export default Vue.extend({
   name: 'McvYourFeed',
   components: {
     McvFeed,
     McvPopularTags,
     McvBanner,
-    McvFeedToggle
+    McvFeedToggle,
   },
-  data() {
+  data(): YourFeedData {
     return {
       apiUrl: '/articles/feed',
     }
   },
-}
+})
 </script>

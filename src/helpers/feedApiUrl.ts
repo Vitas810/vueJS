@@ -1,10 +1,10 @@
-import {stringify, parseUrl} from 'query-string'
-import {limit} from '@/helpers/vars'
+import { parseUrl, stringify } from 'query-string'
+import { limit } from '@/helpers/vars'
 
 /* =============== Построение URL ленты для API ============= */
 
-// Собирает полный query для запроса ленты (limit, offset, фильтры из apiUrl)
-export function buildFeedApiUrl(apiUrl, currentPage) {
+// Собирает полный query для запроса ленты
+export function buildFeedApiUrl(apiUrl: string, currentPage: number): string {
   const pageNumber = Number(currentPage || 1)
   const offset = pageNumber * limit - limit
   const parsedUrl = parseUrl(apiUrl)
@@ -13,5 +13,6 @@ export function buildFeedApiUrl(apiUrl, currentPage) {
     offset,
     ...parsedUrl.query,
   })
+
   return `${parsedUrl.url}?${stringifiedParams}`
 }
