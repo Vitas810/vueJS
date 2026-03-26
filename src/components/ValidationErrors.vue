@@ -1,5 +1,5 @@
 <template>
-  <ul class="error-messages">
+  <ul class="validation-errors">
     <li v-for="errorMessage in errorMessages" :key="errorMessage">
       {{ errorMessage }}
     </li>

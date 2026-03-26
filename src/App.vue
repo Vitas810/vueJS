@@ -1,8 +1,9 @@
 <template>
-  <div id="app">
+  <div id="app" class="app-shell">
     <mcv-topbar />
-
-    <router-view />
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
 

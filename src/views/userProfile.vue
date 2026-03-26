@@ -1,73 +1,87 @@
 <template>
-    <div class="profile-page" v-if="userProfile">
-        <div class="user-info">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12 col-md-10 offset-md-1">
-                        <img class="user-img" :src="userProfile.image" alt="user photo" />
-                        <h4>{{userProfile.username}}</h4>
-                        <p>{{userProfile.bio}}</p>
-                        <div>
-                            FOLLOW USER BTN
-                            <router-link :to="{name: 'settings'}"
-                                         v-if="isCurrentUserProfile"
-                                         class="btn btn-sm btn-outline-secondary action-btn">
-                                 Edit Profile Settings
-                            </router-link>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="profile-page">
+    <section class="profile-hero" v-if="userProfile">
+      <div class="app-container">
+        <div class="profile-hero__card surface-card">
+          <img
+            class="profile-hero__avatar"
+            :src="userProfile.image"
+            alt="user photo"
+          />
+          <h1 class="profile-hero__name">{{ userProfile.username }}</h1>
+          <p class="profile-hero__bio">
+            {{ userProfile.bio || 'This user has not added a short bio yet.' }}
+          </p>
+
+          <router-link
+            v-if="isCurrentUserProfile"
+            :to="{name: 'settings'}"
+            class="app-button app-button_outline app-button_small"
+          >
+            Edit Profile Settings
+          </router-link>
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-md-10 offset-md-1">
-                    <div class="article-toggle">
-                        <ul class="nav nav-pills outline-active">
-                            <li class="nav-item">
-                                <router-link
-                                    :to="{
-                                        name: 'userProfile',
-                                        params: { slug: userProfile.username }
-                                    }"
-                                    class="nav-link"
-                                    :class="{'active': routeName === 'userProfile'}"
-                                >
-                                    My Post
-                                </router-link>
-                            </li>
-                            <li class="nav-item">
-                                <router-link
-                                    :to="{
-                                        name: 'userProfileFavorites',
-                                        params: { slug: userProfile.username }
-                                    }"
-                                    class="nav-link"
-                                    :class="{'active': routeName === 'userProfileFavorites'}"
-                                >
-                                    Favorites Post
-                                </router-link>
-                            </li>
-                        </ul>
-                    </div>
-                    <mcv-feed :api-url="apiUrl" />
-                </div>
+      </div>
+    </section>
+
+    <section class="page-shell page-shell_compact">
+      <div class="profile-page__content">
+        <mcv-loading v-if="isLoading" />
+        <mcv-error-message v-if="error" :message="error" />
+
+        <template v-if="userProfile">
+          <div class="feed-tabs">
+            <div class="feed-tabs__list">
+              <router-link
+                :to="{
+                  name: 'userProfile',
+                  params: { slug: userProfile.username },
+                }"
+                class="feed-tabs__link"
+                :class="{'feed-tabs__link_active': routeName === 'userProfile'}"
+              >
+                My Posts
+              </router-link>
+
+              <router-link
+                :to="{
+                  name: 'userProfileFavorites',
+                  params: { slug: userProfile.username },
+                }"
+                class="feed-tabs__link"
+                :class="{
+                  'feed-tabs__link_active': routeName === 'userProfileFavorites',
+                }"
+              >
+                Favorite Posts
+              </router-link>
             </div>
-        </div>
-    </div>
+          </div>
+
+          <mcv-feed :api-url="apiUrl" />
+        </template>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { actionTypes as userProfileActionTypes } from '@/store/modules/userProfile'
 import { getterTypes as authGetterTypes } from '@/store/modules/auth'
+import McvErrorMessage from '@/components/ErrorMessage.vue'
 import McvFeed from '@/components/Feed.vue'
+import McvLoading from '@/components/Loading.vue'
 import { CurrentUser, Profile } from '@/types/domain'
 import { RootState } from '@/types/store'
 
 export default Vue.extend({
   name: 'McvUserProfile',
-  components: { McvFeed },
+  components: {
+    McvErrorMessage,
+    McvFeed,
+    McvLoading,
+  },
   computed: {
     // Состояние загрузки профиля
     isLoading(): boolean {

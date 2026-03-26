@@ -3,19 +3,19 @@
     <mcv-loading v-if="isLoading" />
     <mcv-error-message v-if="error" :message="error" />
 
-    <div class="sidebar" v-if="popularTags">
-      <p>Popular Tags</p>
-      <div class="tag-list">
+    <aside v-if="popularTags" class="popular-tags surface-card">
+      <h2 class="popular-tags__title">Popular Tags</h2>
+      <div class="popular-tags__list">
         <router-link
           v-for="popularTag in popularTags"
           :key="popularTag"
           :to="{name: 'tag', params: {slug: popularTag}}"
-          class="tag-default tag-pill"
+          class="tag-list__item tag-list__item_link"
         >
           {{ popularTag }}
         </router-link>
       </div>
-    </div>
+    </aside>
   </div>
 </template>
 

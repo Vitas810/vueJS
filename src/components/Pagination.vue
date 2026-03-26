@@ -1,18 +1,15 @@
 <template>
-    <ul class="pagination">
-        <li v-for="page in pages"
-            :key="page"
-            class="page-item"
-            :class="{active: currentPage === page}"
-        >
-            <router-link
-                :to="{path: url, query: {page:page}}"
-                class="page-link"
-            >
-                {{ page }}
-            </router-link>
-        </li>
-    </ul>
+  <ul v-if="pages.length > 1" class="pagination">
+    <li v-for="page in pages" :key="page">
+      <router-link
+        :to="{path: url, query: {page: page}}"
+        class="pagination__link"
+        :class="{'pagination__link_active': currentPage === page}"
+      >
+        {{ page }}
+      </router-link>
+    </li>
+  </ul>
 </template>
 
 <script lang="ts">

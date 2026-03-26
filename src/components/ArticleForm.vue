@@ -1,59 +1,64 @@
 <template>
-    <div>
-        <div class="editor-page">
-            <div class="container page">
-                <div class="row">
-                    <div class="col-md-10 offset-md-1 col-xs-12">
-                        <mcv-validation-errors v-if="errors"  :validation-errors="errors"/>
+  <section class="editor-page">
+    <div class="app-container">
+      <div class="editor-card surface-card">
+        <h1 class="editor-page__title">Article Editor</h1>
+        <p class="editor-page__subtitle">
+          Prepare the article, description and tags in a local form without
+          mutating store data.
+        </p>
 
-                        <form @submit.prevent="onSubmit">
-                            <fieldset>
-                                <fieldset class="form-group">
-                                    <input type="text"
-                                           class="form-control form-control-lg"
-                                           placeholder="Article title"
-                                           v-model="title"
-                                    />
-                                </fieldset>
+        <mcv-validation-errors v-if="errors" :validation-errors="errors" />
 
-                                <fieldset class="form-group">
-                                    <input type="text"
-                                           class="form-control form-control-lg"
-                                           placeholder="description"
-                                           v-model="description"
-                                    />
-                                </fieldset>
+        <form class="form-layout" @submit.prevent="onSubmit">
+          <label class="app-field">
+            <span class="app-field__label">Article title</span>
+            <input
+              v-model="title"
+              type="text"
+              class="app-input"
+              placeholder="Article title"
+            />
+          </label>
 
-                                <fieldset class="form-group">
-                                    <textarea  class="form-control form-control-lg"
-                                               placeholder="What is this article about?"
-                                               v-model="body"
-                                    > </textarea>
-                                </fieldset>
+          <label class="app-field">
+            <span class="app-field__label">Description</span>
+            <input
+              v-model="description"
+              type="text"
+              class="app-input"
+              placeholder="Short description"
+            />
+          </label>
 
-                                <fieldset class="form-group">
-                                    <input type="text"
-                                           class="form-control form-control-lg"
-                                           placeholder="Enter tags"
-                                           v-model="tagList"
-                                    />
-                                </fieldset>
+          <label class="app-field">
+            <span class="app-field__label">Content</span>
+            <textarea
+              v-model="body"
+              class="app-textarea"
+              placeholder="What is this article about?"
+            ></textarea>
+          </label>
 
-                                <fieldset class="form-group">
-                                    <button class="btn btn-lg pull-xs-right btn-primary"
-                                            type="submit"
-                                            :disabled="isSubmitting"
-                                    >
-                                        Publish Article
-                                    </button>
-                                </fieldset>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+          <label class="app-field">
+            <span class="app-field__label">Tags</span>
+            <input
+              v-model="tagList"
+              type="text"
+              class="app-input"
+              placeholder="Enter tags separated by spaces"
+            />
+          </label>
+
+          <div class="form-layout__actions">
+            <button class="app-button" type="submit" :disabled="isSubmitting">
+              Publish Article
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </section>
 </template>
 
 <script lang="ts">

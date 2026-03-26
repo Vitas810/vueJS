@@ -1,9 +1,13 @@
 <template>
-    <ul class="tag-list">
-        <li v-for="tag in tags" :key="tag" class="tag-default tag-pill tag-outline">
-            {{tag}}
-        </li>
-    </ul>
+  <ul class="tag-list">
+    <li
+      v-for="tag in tags"
+      :key="tag"
+      class="tag-list__item tag-list__item_outline"
+    >
+      {{ tag }}
+    </li>
+  </ul>
 </template>
 
 <script lang="ts">

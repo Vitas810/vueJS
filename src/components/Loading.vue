@@ -1,5 +1,8 @@
 <template>
-  <div>Loading...</div>
+  <div class="state-message">
+    <span class="state-message__spinner"></span>
+    <span>Loading...</span>
+  </div>
 </template>
 
 <script lang="ts">
