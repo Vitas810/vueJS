@@ -1,19 +1,21 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import GlobalFeed from '@/views/GlobalFeed'
-import YourFeed from "@/views/YourFeed";
-import Register from '@/views/Register'
-import Login from '@/views/Login'
-import TagFeed from "@/views/TagFeed";
-import Article from "@/views/Article";
-import CreateArticle from "@/views/CreateArticle";
-import EditArticle from "@/views/editArticle"
-import Settings from "@/views/Settings";
-import userProfile from "@/views/userProfile";
+import VueRouter, { RouteConfig } from 'vue-router'
+import GlobalFeed from '@/views/GlobalFeed.vue'
+import YourFeed from '@/views/YourFeed.vue'
+import Register from '@/views/Register.vue'
+import Login from '@/views/Login.vue'
+import TagFeed from '@/views/TagFeed.vue'
+import Article from '@/views/Article.vue'
+import CreateArticle from '@/views/CreateArticle.vue'
+import EditArticle from '@/views/editArticle.vue'
+import Settings from '@/views/Settings.vue'
+import UserProfile from '@/views/userProfile.vue'
+
+/* =============== Инициализация роутера ============= */
 
 Vue.use(VueRouter)
 
-const routes = [
+const routes: RouteConfig[] = [
   {
     path: '/register',
     name: 'register',
@@ -62,12 +64,12 @@ const routes = [
   {
     path: '/profiles/:slug',
     name: 'userProfile',
-    component: userProfile,
+    component: UserProfile,
   },
   {
     path: '/profiles/:slug/favorites',
     name: 'userProfileFavorites',
-    component: userProfile,
+    component: UserProfile,
   },
 ]
 

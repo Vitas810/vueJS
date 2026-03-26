@@ -53,17 +53,25 @@
   </div>
 </template>
 
-<script>
-import McvValidationErrors from '@/components/ValidationErrors'
-import {actionsTypes} from '@/store/modules/auth'
-import {mapState} from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import McvValidationErrors from '@/components/ValidationErrors.vue'
+import { actionsTypes } from '@/store/modules/auth'
+import { CurrentUser, ValidationErrors } from '@/types/domain'
+import { RootState } from '@/types/store'
 
-export default {
+interface RegisterData {
+  email: string
+  password: string
+  username: string
+}
+
+export default Vue.extend({
   name: 'McvRegister',
   components: {
     McvValidationErrors,
   },
-  data() {
+  data(): RegisterData {
     return {
       email: '',
       password: '',
@@ -71,24 +79,29 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      isSubmiting: (state) => state.auth.isSubmiting,
-      validationErrors: (state) => state.auth.validationErrors,
-    }),
-  },
-  methods: {
-    onSubmit() {
-      this.$store
-        .dispatch(actionsTypes.register, {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-        })
-        .then((user) => {
-          console.log('successfully register user', user)
-          this.$router.push({name: 'globalfeed'})
-        })
+    // Флаг отправки формы
+    isSubmiting(): boolean {
+      return (this.$store.state as RootState).auth.isSubmiting
+    },
+
+    // Ошибки валидации
+    validationErrors(): ValidationErrors | null {
+      return (this.$store.state as RootState).auth.validationErrors
     },
   },
-}
+  methods: {
+    // Отправка формы регистрации
+    onSubmit(): void {
+      const registerPromise = this.$store.dispatch(actionsTypes.register, {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      }) as Promise<CurrentUser>
+
+      registerPromise.then(() => {
+        this.$router.push({ name: 'globalfeed' })
+      })
+    },
+  },
+})
 </script>

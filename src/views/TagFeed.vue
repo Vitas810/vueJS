@@ -15,27 +15,31 @@
   </div>
 </template>
 
-<script>
-import McvFeed from '@/components/Feed'
-import McvPopularTags from "@/components/PopularTags";
-import McvBanner from '@/components/Banner'
-import McvFeedToggle from '@/components/FeedToggle'
+<script lang="ts">
+import Vue from 'vue'
+import McvFeed from '@/components/Feed.vue'
+import McvPopularTags from '@/components/PopularTags.vue'
+import McvBanner from '@/components/Banner.vue'
+import McvFeedToggle from '@/components/FeedToggle.vue'
 
-export default {
+export default Vue.extend({
   name: 'McvTagFeed',
   components: {
     McvFeed,
     McvPopularTags,
     McvBanner,
-    McvFeedToggle
+    McvFeedToggle,
   },
-    computed: {
-      tagName() {
-          return this.$route.params.slug
-      },
-      apiUrl() {
-          return `/articles?tag=${this.tagName}`
-      }
+  computed: {
+    // Имя активного тега
+    tagName(): string {
+      return String(this.$route.params.slug ?? '')
+    },
+
+    // URL ленты по тегу
+    apiUrl(): string {
+      return `/articles?tag=${this.tagName}`
+    },
   },
-}
+})
 </script>

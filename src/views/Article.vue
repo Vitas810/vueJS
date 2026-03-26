@@ -43,50 +43,81 @@
     </div>
 </template>
 
-<script>
-import {actionTypes as articleActionTypes} from '@/store/modules/article'
-import {getterTypes as authGetterTypes} from "@/store/modules/auth";
-import {mapState, mapGetters} from "vuex";
-import McvLoading from "@/components/Loading";
-import McvErrorMessage from "@/components/ErrorMessage";
-import McvTagList from "@/components/Taglist";
+<script lang="ts">
+import Vue from 'vue'
+import { actionTypes as articleActionTypes } from '@/store/modules/article'
+import { getterTypes as authGetterTypes } from '@/store/modules/auth'
+import McvLoading from '@/components/Loading.vue'
+import McvErrorMessage from '@/components/ErrorMessage.vue'
+import McvTagList from '@/components/Taglist.vue'
+import { Article, CurrentUser } from '@/types/domain'
+import { RootState } from '@/types/store'
 
-export default {
-    name: 'McvArticle',
-    components: {McvErrorMessage, McvLoading, McvTagList},
-    computed: {
-        ...mapState({
-            isLoading: state => state.article.isLoading,
-            error: state => state.article.error,
-            article: state => state.article.data
-        }),
-        ...mapGetters({
-            currentUser: authGetterTypes.currentUser
-        }),
-        isAuthor() {
-            if(!this.currentUser || !this.article) {
-                return false
-            }
-            return  this.currentUser.username === this.article.author.username
-        }
+export default Vue.extend({
+  name: 'McvArticle',
+  components: {
+    McvErrorMessage,
+    McvLoading,
+    McvTagList,
+  },
+  computed: {
+    // Флаг загрузки статьи
+    isLoading(): boolean {
+      return (this.$store.state as RootState).article.isLoading
     },
-    mounted() {
-        this.$store.dispatch(articleActionTypes.getArticle, {slug: this.$route.params.slug})
+
+    // Ошибка статьи
+    error(): string | null {
+      return (this.$store.state as RootState).article.error
     },
-    watch: {
-        '$route.params.slug'(slug) {
-            if (slug) {
-                this.$store.dispatch(articleActionTypes.getArticle, {slug})
-            }
-        }
+
+    // Текущая статья
+    article(): Article | null {
+      return (this.$store.state as RootState).article.data
     },
-    methods: {
-        deleteArticle() {
-            this.$store.dispatch(articleActionTypes.deleteArticle, {slug: this.$route.params.slug})
-            .then(() => {
-                this.$router.push({name: 'globalfeed'})
-            })
-        }
-    }
-}
+
+    // Текущий пользователь
+    currentUser(): CurrentUser | null {
+      return this.$store.getters[authGetterTypes.currentUser] as CurrentUser | null
+    },
+
+    // Признак автора статьи
+    isAuthor(): boolean {
+      if (!this.currentUser || !this.article) {
+        return false
+      }
+
+      return this.currentUser.username === this.article.author.username
+    },
+
+    // slug активной статьи
+    articleSlug(): string {
+      return String(this.$route.params.slug ?? '')
+    },
+  },
+  mounted() {
+    this.$store.dispatch(articleActionTypes.getArticle, {
+      slug: this.articleSlug,
+    })
+  },
+  watch: {
+    articleSlug(slug: string): void {
+      if (slug) {
+        this.$store.dispatch(articleActionTypes.getArticle, { slug })
+      }
+    },
+  },
+  methods: {
+    // Удаление статьи
+    deleteArticle(): void {
+      const deletePromise = this.$store.dispatch(articleActionTypes.deleteArticle, {
+        slug: this.articleSlug,
+      }) as Promise<void>
+
+      deletePromise.then(() => {
+        this.$router.push({ name: 'globalfeed' })
+      })
+    },
+  },
+})
 </script>

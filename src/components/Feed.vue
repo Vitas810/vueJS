@@ -56,18 +56,24 @@
   </div>
 </template>
 
-<script>
-import {mapState} from 'vuex'
-import {actionTypes} from '@/store/modules/feed'
-import McvPagination from '@/components/Pagination'
-import {limit} from '@/helpers/vars'
-import {buildFeedApiUrl} from '@/helpers/feedApiUrl'
-import McvLoading from '@/components/Loading'
-import McvErrorMessage from "@/components/ErrorMessage";
-import McvTagList from "@/components/Taglist";
-import McvAddToFavorites from "@/components/AddToFavorites"
+<script lang="ts">
+import Vue from 'vue'
+import { actionTypes } from '@/store/modules/feed'
+import McvPagination from '@/components/Pagination.vue'
+import { limit } from '@/helpers/vars'
+import { buildFeedApiUrl } from '@/helpers/feedApiUrl'
+import McvLoading from '@/components/Loading.vue'
+import McvErrorMessage from '@/components/ErrorMessage.vue'
+import McvTagList from '@/components/Taglist.vue'
+import McvAddToFavorites from '@/components/AddToFavorites.vue'
+import { FeedResponse } from '@/types/domain'
+import { RootState } from '@/types/store'
 
-export default {
+interface FeedData {
+  limit: number
+}
+
+export default Vue.extend({
   name: 'McvFeed',
   props: {
     apiUrl: {
@@ -80,42 +86,57 @@ export default {
     McvErrorMessage,
     McvPagination,
     McvLoading,
-    McvAddToFavorites
+    McvAddToFavorites,
   },
-  data() {
+  data(): FeedData {
     return {
       limit,
     }
   },
   computed: {
-    ...mapState({
-      isLoading: (state) => state.feed.isLoading,
-      feed: (state) => state.feed.data,
-      error: (state) => state.feed.error,
-    }),
-    currentPage() {
+    // Флаг загрузки ленты
+    isLoading(): boolean {
+      return (this.$store.state as RootState).feed.isLoading
+    },
+
+    // Данные ленты
+    feed(): FeedResponse | null {
+      return (this.$store.state as RootState).feed.data
+    },
+
+    // Ошибка ленты
+    error(): string | null {
+      return (this.$store.state as RootState).feed.error
+    },
+
+    // Текущая страница
+    currentPage(): number {
       return Number(this.$route.query.page || '1')
     },
-    baseUrl() {
+
+    // Базовый URL страницы
+    baseUrl(): string {
       return this.$route.path
     },
   },
   watch: {
-    currentPage() {
+    currentPage(): void {
       this.fetchFeed()
     },
-    apiUrl () {
+    apiUrl(): void {
       this.fetchFeed()
-    }
+    },
   },
   mounted() {
     this.fetchFeed()
   },
   methods: {
-    fetchFeed() {
+    // Загрузка ленты по текущим параметрам
+    fetchFeed(): void {
       const apiUrlWithParams = buildFeedApiUrl(this.apiUrl, this.currentPage)
-      this.$store.dispatch(actionTypes.getFeed, {apiUrl: apiUrlWithParams})
+
+      this.$store.dispatch(actionTypes.getFeed, { apiUrl: apiUrlWithParams })
     },
   },
-}
+})
 </script>

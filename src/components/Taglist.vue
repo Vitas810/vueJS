@@ -6,14 +6,16 @@
     </ul>
 </template>
 
-<script>
-    export default {
-        name: 'McvTagList',
-        props: {
-            tags: {
-                type: Array,
-                required: true
-            }
-        }
-    }
+<script lang="ts">
+import Vue, { PropType } from 'vue'
+
+export default Vue.extend({
+  name: 'McvTagList',
+  props: {
+    tags: {
+      type: Array as PropType<string[]>,
+      required: true,
+    },
+  },
+})
 </script>

@@ -56,43 +56,69 @@
     </div>
 </template>
 
-<script>
-    import McvValidationErrors from "@/components/ValidationErrors";
-    export default {
-        name: 'McvArticleForm',
-        props: {
-            initialValues: {
-                type: Object,
-                required: true
-            },
-            errors: {
-                type: Object,
-                required: false
-            },
-            isSubmitting: {
-                type: Boolean,
-                required: true
-            }
-        },
-        components: {McvValidationErrors},
-        data() {
-            return {
-                title: this.initialValues.title,
-                description: this.initialValues.description,
-                body: this.initialValues.body,
-                tagList: this.initialValues.tagList.join(' ')
-            }
-        },
-        methods: {
-            onSubmit() {
-                const form = {
-                    title: this.title,
-                    description:  this.description,
-                    body: this.body,
-                    tagList: this.tagList.split(' ')
-                }
-                this.$emit('articleSubmit', form)
-            },
-        }
+<script lang="ts">
+import Vue, { PropType } from 'vue'
+import McvValidationErrors from '@/components/ValidationErrors.vue'
+import { ArticleFormValues, ValidationErrors } from '@/types/domain'
+
+interface ArticleFormData {
+  title: string
+  description: string
+  body: string
+  tagList: string
+}
+
+export default Vue.extend({
+  name: 'McvArticleForm',
+  components: { McvValidationErrors },
+  props: {
+    initialValues: {
+      type: Object as PropType<ArticleFormValues>,
+      required: true,
+    },
+    errors: {
+      type: Object as PropType<ValidationErrors | null>,
+      required: false,
+      default: null,
+    },
+    isSubmitting: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  data(): ArticleFormData {
+    return {
+      title: this.initialValues.title,
+      description: this.initialValues.description,
+      body: this.initialValues.body,
+      tagList: this.initialValues.tagList.join(' '),
     }
+  },
+  watch: {
+    // Синхронизация формы с входными значениями
+    initialValues: {
+      immediate: true,
+      deep: true,
+      handler(initialValues: ArticleFormValues): void {
+        this.title = initialValues.title
+        this.description = initialValues.description
+        this.body = initialValues.body
+        this.tagList = initialValues.tagList.join(' ')
+      },
+    },
+  },
+  methods: {
+    // Отправка формы статьи
+    onSubmit(): void {
+      const form: ArticleFormValues = {
+        title: this.title,
+        description: this.description,
+        body: this.body,
+        tagList: this.tagList.split(' ').filter(Boolean),
+      }
+
+      this.$emit('articleSubmit', form)
+    },
+  },
+})
 </script>
