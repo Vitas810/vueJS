@@ -1,17 +1,17 @@
 <template>
-  <div class="home-page">
+  <div>
     <mcv-banner />
-    <div class="container page">
-      <div class="row">
-        <div class="col-md-9">
-            <mcv-feed-toggle :tag-name="tagName" />
-            <mcv-feed :api-url="apiUrl" />
+    <section class="page-shell page-shell_compact">
+      <div class="app-container page-grid">
+        <div class="page-grid__main">
+          <mcv-feed-toggle :tag-name="tagName" />
+          <mcv-feed :api-url="apiUrl" />
         </div>
-        <div class="col-md-3">
-            <mcv-popular-tags />
-        </div>
+        <aside class="page-grid__aside">
+          <mcv-popular-tags />
+        </aside>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 

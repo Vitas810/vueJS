@@ -1,10 +1,15 @@
 <template>
-  <div class="banner">
-    <div class="container">
-      <h1>Medium Clone</h1>
-      <p>A place to share knowledge</p>
+  <section class="hero-banner">
+    <div class="app-container">
+      <div class="hero-banner__card surface-card">
+        <h1 class="hero-banner__title">Medium Clone</h1>
+        <p class="hero-banner__text">
+          A modern place for articles, notes and discussions with a fully local
+          UI layer.
+        </p>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

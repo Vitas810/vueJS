@@ -1,49 +1,47 @@
 <template>
-  <div>
-    <div class="auth-page">
-      <div class="container page">
-        <div class="row">
-          <div class="col-md-6 offset-md-3 col-xs-12">
-            <h1 class="text-xs-center">Sign In</h1>
-            <p class="text-xs-center">
-              <router-link :to="{name: 'register'}"
-                >Need an account ?</router-link
-              >
-            </p>
-            <mcv-validation-errors
-              v-if="validationErrors"
-              :validation-errors="validationErrors"
-            />
-            <form @submit.prevent="onSubmit">
-              <fieldset class="form-group">
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  placeholder="Email"
-                  v-model="email"
-                />
-              </fieldset>
+  <section class="auth-page">
+    <div class="app-container">
+      <div class="auth-card surface-card">
+        <h1 class="auth-page__title">Sign In</h1>
+        <p class="auth-page__subtitle">
+          <router-link class="auth-page__link" :to="{name: 'register'}">
+            Need an account?
+          </router-link>
+        </p>
 
-              <fieldset class="form-group">
-                <input
-                  type="password"
-                  class="form-control form-control-lg"
-                  placeholder="password"
-                  v-model="password"
-                />
-              </fieldset>
-              <button
-                class="btn btn-lg btn-primary pull-xs-right"
-                :disabled="isSubmiting"
-              >
-                Sign In
-              </button>
-            </form>
+        <mcv-validation-errors
+          v-if="validationErrors"
+          :validation-errors="validationErrors"
+        />
+
+        <form class="form-layout" @submit.prevent="onSubmit">
+          <label class="app-field">
+            <span class="app-field__label">Email</span>
+            <input
+              v-model="email"
+              type="text"
+              class="app-input"
+              placeholder="Enter your email"
+            />
+          </label>
+
+          <label class="app-field">
+            <span class="app-field__label">Password</span>
+            <input
+              v-model="password"
+              type="password"
+              class="app-input"
+              placeholder="Enter your password"
+            />
+          </label>
+
+          <div class="form-layout__actions">
+            <button class="app-button" :disabled="isSubmiting">Sign In</button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,7 @@
 <template>
-  <div>{{ message }}</div>
+  <div class="state-message state-message_error">
+    <span>{{ message }}</span>
+  </div>
 </template>
 
 <script lang="ts">

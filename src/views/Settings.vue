@@ -1,68 +1,83 @@
 <template>
-    <div class="settings-page" v-if="currentUser">
-        <div class="container page">
-            <div class="row">
-                <div class="col-md-6 offset-md-3 col-xs-12">
-                    <h1 class="text-xs-center">Settings</h1>
-                    <mcv-validation-errors
-                        v-if="validationErrors"
-                        :validation-errors="validationErrors"
-                    />
-                    <form @submit.prevent="onSubmit">
-                        <fieldset>
-                            <fieldset class="form-group">
-                                <input type="text"
-                                       class="form-control from-control-lg"
-                                       v-model="form.image"
-                                       placeholder="URL of profile picture"
-                                >
-                            </fieldset>
+  <section v-if="currentUser" class="settings-page">
+    <div class="app-container">
+      <div class="settings-card surface-card">
+        <h1 class="settings-page__title">Settings</h1>
+        <p class="settings-page__subtitle">
+          Manage your profile in a local form without mutating store data
+          directly.
+        </p>
 
-                            <fieldset class="form-group">
-                                <input type="text"
-                                       class="form-control from-control-lg"
-                                       v-model="form.username"
-                                       placeholder="Username"
-                                >
-                            </fieldset>
+        <mcv-validation-errors
+          v-if="validationErrors"
+          :validation-errors="validationErrors"
+        />
 
-                            <fieldset class="form-group">
-                                <textarea class="form-control from-control-lg"
-                                       v-model="form.bio"
-                                       placeholder="Short bio about you"
-                                > </textarea>
-                            </fieldset>
+        <form class="form-layout" @submit.prevent="onSubmit">
+          <label class="app-field">
+            <span class="app-field__label">Profile picture</span>
+            <input
+              v-model="form.image"
+              type="text"
+              class="app-input"
+              placeholder="URL of profile picture"
+            />
+          </label>
 
-                            <fieldset class="form-group">
-                                <input type="text"
-                                       class="form-control from-control-lg"
-                                       v-model="form.email"
-                                       placeholder="Email"
-                                >
-                            </fieldset>
+          <label class="app-field">
+            <span class="app-field__label">Username</span>
+            <input
+              v-model="form.username"
+              type="text"
+              class="app-input"
+              placeholder="Username"
+            />
+          </label>
 
-                            <fieldset class="form-group">
-                                <input type="password"
-                                       class="form-control from-control-lg"
-                                       v-model="form.password"
-                                       placeholder="Password"
-                                >
-                            </fieldset>
-                            <button type="submit"
-                                    class="btn btn-lg btn-primary pull-xs-right"
-                                    :disabled="isSubmitting"
-                            >Update settings</button>
-                        </fieldset>
-                    </form>
-                    <hr/>
-                    <button class="btn btn-outline-danger"
-                            @click="logout"
-                            type="submit"
-                    >Or click here to logout</button>
-                </div>
-            </div>
+          <label class="app-field">
+            <span class="app-field__label">Short bio</span>
+            <textarea
+              v-model="form.bio"
+              class="app-textarea"
+              placeholder="Short bio about you"
+            ></textarea>
+          </label>
+
+          <label class="app-field">
+            <span class="app-field__label">Email</span>
+            <input
+              v-model="form.email"
+              type="text"
+              class="app-input"
+              placeholder="Email"
+            />
+          </label>
+
+          <label class="app-field">
+            <span class="app-field__label">Password</span>
+            <input
+              v-model="form.password"
+              type="password"
+              class="app-input"
+              placeholder="Password"
+            />
+          </label>
+
+          <div class="form-layout__actions">
+            <button class="app-button" type="submit" :disabled="isSubmitting">
+              Update Settings
+            </button>
+          </div>
+        </form>
+
+        <div class="settings-page__logout">
+          <button class="app-button app-button_danger" @click="logout" type="button">
+            Logout
+          </button>
         </div>
+      </div>
     </div>
+  </section>
 </template>
 
 <script lang="ts">

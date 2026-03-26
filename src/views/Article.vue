@@ -1,50 +1,72 @@
 <template>
-    <div class="article-page">
-       <div class="banner">
-           <div class="container" v-if="article">
-                <h1>{{article.title}}</h1>
-               <div class="article-meta">
-                   <router-link :to="{name: 'userProfile', params: {slug: article.author.username}}">
-                       <img :src="article.author.image" :alt="article.author.username">
-                   </router-link>
-                   <div class="info">
-                       <router-link :to="{name: 'userProfile', params: {slug: article.author.username}}">
-                           {{article.author.username}}
-                       </router-link>
-                       <span class="date">{{article.createdAt}}</span>
-                   </div>
-                   <span v-if="isAuthor">
-                       <router-link
-                           class="btn btn-outline-secondary btn-sm"
-                           :to="{name: 'editArticle', params: {slug: article.slug}}" >
-                           <i class="ion-edit" />
-                           Edit Article
-                       </router-link>
-                       <button class="btn btn-outline-danger btn-sm" @click="deleteArticle">
-                           <i class="ion-trash-a" />
-                           Delete Article
-                       </button>
-                   </span>
-               </div>
-           </div>
-       </div>
-        <div class="container page">
-            <mcv-loading v-if="isLoading" />
-            <mcv-error-message v-if="error" :message="error" />
-            <div class="row article-content" v-if="article">
-                <div class="col-xs-12">
-                    <div>
-                        <p>{{article.body}}</p>
-                    </div>
-                    <mcv-tag-list :tags="article.tagList" />
-                </div>
+  <div class="article-page">
+    <section v-if="article" class="article-hero">
+      <div class="app-container">
+        <div class="article-hero__card surface-card">
+          <h1 class="article-hero__title">{{ article.title }}</h1>
+
+          <div class="article-hero__meta">
+            <div class="article-page__author">
+              <router-link
+                :to="{name: 'userProfile', params: {slug: article.author.username}}"
+              >
+                <img
+                  :src="article.author.image"
+                  :alt="article.author.username"
+                  class="article-page__author-avatar"
+                />
+              </router-link>
+
+              <div>
+                <router-link
+                  :to="{name: 'userProfile', params: {slug: article.author.username}}"
+                  class="article-page__author-name"
+                >
+                  {{ article.author.username }}
+                </router-link>
+                <div class="article-page__date">{{ article.createdAt }}</div>
+              </div>
             </div>
+
+            <div v-if="isAuthor" class="article-page__actions">
+              <router-link
+                class="app-button app-button_outline app-button_small"
+                :to="{name: 'editArticle', params: {slug: article.slug}}"
+              >
+                <mcv-app-icon name="edit" />
+                <span>Edit Article</span>
+              </router-link>
+
+              <button
+                class="app-button app-button_danger app-button_small"
+                @click="deleteArticle"
+              >
+                <mcv-app-icon name="delete" />
+                <span>Delete Article</span>
+              </button>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
+
+    <section class="page-shell page-shell_compact">
+      <div class="article-page__content">
+        <mcv-loading v-if="isLoading" />
+        <mcv-error-message v-if="error" :message="error" />
+
+        <article v-if="article" class="article-page__body surface-card">
+          <p class="article-page__text">{{ article.body }}</p>
+          <mcv-tag-list :tags="article.tagList" />
+        </article>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import McvAppIcon from '@/components/AppIcon.vue'
 import { actionTypes as articleActionTypes } from '@/store/modules/article'
 import { getterTypes as authGetterTypes } from '@/store/modules/auth'
 import McvLoading from '@/components/Loading.vue'
@@ -56,6 +78,7 @@ import { RootState } from '@/types/store'
 export default Vue.extend({
   name: 'McvArticle',
   components: {
+    McvAppIcon,
     McvErrorMessage,
     McvLoading,
     McvTagList,

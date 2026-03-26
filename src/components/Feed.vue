@@ -3,47 +3,46 @@
     <mcv-loading v-if="isLoading" />
     <mcv-error-message v-if="error" :message="error" />
 
-    <div v-if="feed">
+    <div v-if="feed" class="feed-list">
       <div
-        class="article-preview"
+        class="feed-card surface-card"
         v-for="article in feed.articles"
         :key="article.slug"
       >
-        <div class="article-meta">
+        <div class="feed-card__header">
           <router-link
+            class="feed-card__meta"
             :to="{name: 'userProfile', params: {slug: article.author.username}}"
           >
-            <img :src="article.author.image" :alt="article.author.username" />
+            <img
+              :src="article.author.image"
+              :alt="article.author.username"
+              class="feed-card__avatar"
+            />
+            <span class="feed-card__meta-content">
+              <span class="feed-card__author">{{ article.author.username }}</span>
+              <span class="feed-card__date">{{ article.createdAt }}</span>
+            </span>
           </router-link>
-          <div class="info">
-            <router-link
-              :to="{
-                name: 'userProfile',
-                params: {slug: article.author.username},
-              }"
-              class="author"
-            >
-              {{ article.author.username }}
-            </router-link>
-            <span class="date">{{ article.createdAt }}</span>
-          </div>
-          <div class="pull-xs-right">
-              <mcv-add-to-favorites
-                :is-favorited="article.favorited"
-                :article-slug="article.slug"
-                :favorites-count="article.favoritesCount"
-              />
-          </div>
+
+          <mcv-add-to-favorites
+            :is-favorited="article.favorited"
+            :article-slug="article.slug"
+            :favorites-count="article.favoritesCount"
+          />
         </div>
+
         <router-link
           :to="{name: 'article', params: {slug: article.slug}}"
-          class="preview-link"
+          class="feed-card__link"
         >
-          <h1>{{ article.title }}</h1>
-          <p>{{ article.description }}</p>
-          <span>Read more...</span>
+          <h2 class="feed-card__title">{{ article.title }}</h2>
+          <p class="feed-card__description">{{ article.description }}</p>
 
-          <mcv-tag-list :tags="article.tagList" />
+          <div class="feed-card__footer">
+            <span class="feed-card__more">Read article</span>
+            <mcv-tag-list :tags="article.tagList" />
+          </div>
         </router-link>
       </div>
       <mcv-pagination
