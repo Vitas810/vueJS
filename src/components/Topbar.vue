@@ -72,7 +72,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import {getterTypes} from '@/store/modules/auth'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {authModuleName, getterTypes} from '@/store/modules/auth'
 import {CurrentUser} from '@/types/domain'
 
 export default Vue.extend({
@@ -83,17 +84,23 @@ export default Vue.extend({
   computed: {
     // Текущий пользователь
     currentUser(): CurrentUser | null {
-      return this.$store.getters[getterTypes.currentUser] as CurrentUser | null
+      return this.$store.getters[
+        getNamespacedType(authModuleName, getterTypes.currentUser)
+      ] as CurrentUser | null
     },
 
     // Флаг авторизованного пользователя
     isLoggedIn(): boolean {
-      return this.$store.getters[getterTypes.isLoggedIn] as boolean
+      return this.$store.getters[
+        getNamespacedType(authModuleName, getterTypes.isLoggedIn)
+      ] as boolean
     },
 
     // Флаг гостя
     isAnonymous(): boolean {
-      return this.$store.getters[getterTypes.isAnonymous] as boolean
+      return this.$store.getters[
+        getNamespacedType(authModuleName, getterTypes.isAnonymous)
+      ] as boolean
     },
   },
 })

@@ -15,7 +15,11 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import {actionTypes} from '@/store/modules/addToFavorites'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {
+  actionTypes,
+  addToFavoritesModuleName,
+} from '@/store/modules/addToFavorites'
 import {Article} from '@/types/domain'
 
 interface AddToFavoritesData {
@@ -64,10 +68,13 @@ export default Vue.extend({
     handleLike(): void {
       const previousFavorited = this.isFavoritesOptimistic
       const previousCount = this.favoritesCountOptimistic
-      const favoritePromise = this.$store.dispatch(actionTypes.addToFavorites, {
-        slug: this.articleSlug,
-        isFavorited: previousFavorited,
-      }) as Promise<Article>
+      const favoritePromise = this.$store.dispatch(
+        getNamespacedType(addToFavoritesModuleName, actionTypes.addToFavorites),
+        {
+          slug: this.articleSlug,
+          isFavorited: previousFavorited,
+        }
+      ) as Promise<Article>
 
       favoritePromise
         .then((article) => {

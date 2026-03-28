@@ -68,8 +68,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {actionTypes as userProfileActionTypes} from '@/store/modules/userProfile'
-import {getterTypes as authGetterTypes} from '@/store/modules/auth'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {
+  authModuleName,
+  getterTypes as authGetterTypes,
+} from '@/store/modules/auth'
+import {
+  actionTypes as userProfileActionTypes,
+  userProfileModuleName,
+} from '@/store/modules/userProfile'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
 import McvFeed from '@/components/Feed.vue'
 import McvLoading from '@/components/Loading.vue'
@@ -102,7 +109,7 @@ export default Vue.extend({
     // Текущий пользователь
     currentUser(): CurrentUser | null {
       return this.$store.getters[
-        authGetterTypes.currentUser
+        getNamespacedType(authModuleName, authGetterTypes.currentUser)
       ] as CurrentUser | null
     },
 
@@ -145,9 +152,15 @@ export default Vue.extend({
   methods: {
     // Загрузка профиля пользователя
     getUserProfile(): void {
-      this.$store.dispatch(userProfileActionTypes.getUserProfile, {
-        slug: this.userProfileSlug,
-      })
+      this.$store.dispatch(
+        getNamespacedType(
+          userProfileModuleName,
+          userProfileActionTypes.getUserProfile
+        ),
+        {
+          slug: this.userProfileSlug,
+        }
+      )
     },
   },
 })

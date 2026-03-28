@@ -5,14 +5,16 @@ import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы popularTags ============= */
 
+export const popularTagsModuleName = 'popularTags'
+
 export const mutationTypes = {
-  getPopularTagsStart: '[popularTags] Get popular tags start',
-  getPopularTagsSuccess: '[popularTags] Get popular tags Success',
-  getPopularTagsFailure: '[popularTags] Get popular tags Failure',
+  getPopularTagsStart: 'getPopularTagsStart',
+  getPopularTagsSuccess: 'getPopularTagsSuccess',
+  getPopularTagsFailure: 'getPopularTagsFailure',
 } as const
 
 export const actionTypes = {
-  getPopularTags: '[popularTags] Get popular tags',
+  getPopularTags: 'getPopularTags',
 } as const
 
 const state: PopularTagsState = {
@@ -62,6 +64,7 @@ const actions: ActionTree<PopularTagsState, RootState> = {
 }
 
 const popularTagsModule: Module<PopularTagsState, RootState> = {
+  namespaced: true,
   state,
   actions,
   mutations,

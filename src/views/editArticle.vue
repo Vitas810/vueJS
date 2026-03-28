@@ -16,7 +16,8 @@
 import Vue from 'vue'
 import McvArticleForm from '@/components/ArticleForm.vue'
 import McvLoading from '@/components/Loading.vue'
-import {actionTypes} from '@/store/modules/editArticle'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {actionTypes, editArticleModuleName} from '@/store/modules/editArticle'
 import {Article, ArticleFormValues, ValidationErrors} from '@/types/domain'
 import {RootState} from '@/types/store'
 
@@ -77,17 +78,23 @@ export default Vue.extend({
   methods: {
     // Загрузка статьи для редактирования
     fetchArticle(): void {
-      this.$store.dispatch(actionTypes.getArticle, {
-        slug: this.articleSlug,
-      })
+      this.$store.dispatch(
+        getNamespacedType(editArticleModuleName, actionTypes.getArticle),
+        {
+          slug: this.articleSlug,
+        }
+      )
     },
 
     // Обновление статьи
     onSubmit(articleInput: ArticleFormValues): void {
-      const updatePromise = this.$store.dispatch(actionTypes.updateArticle, {
-        articleInput,
-        slug: this.articleSlug,
-      }) as Promise<Article>
+      const updatePromise = this.$store.dispatch(
+        getNamespacedType(editArticleModuleName, actionTypes.updateArticle),
+        {
+          articleInput,
+          slug: this.articleSlug,
+        }
+      ) as Promise<Article>
 
       updatePromise.then((article) => {
         this.$router.push({name: 'article', params: {slug: article.slug}})

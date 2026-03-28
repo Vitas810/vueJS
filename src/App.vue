@@ -11,7 +11,8 @@
 import Vue from 'vue'
 import McvTopbar from '@/components/Topbar.vue'
 import {hasAccessToken} from '@/helpers/accessToken'
-import {actionsTypes} from '@/store/modules/auth'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {actionTypes, authModuleName} from '@/store/modules/auth'
 
 export default Vue.extend({
   name: 'McvApp',
@@ -23,7 +24,9 @@ export default Vue.extend({
       return
     }
 
-    this.$store.dispatch(actionsTypes.getCurrentUser)
+    this.$store.dispatch(
+      getNamespacedType(authModuleName, actionTypes.getCurrentUser)
+    )
   },
 })
 </script>

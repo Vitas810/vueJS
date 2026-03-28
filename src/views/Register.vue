@@ -57,7 +57,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvValidationErrors from '@/components/ValidationErrors.vue'
-import {actionsTypes} from '@/store/modules/auth'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {actionTypes, authModuleName} from '@/store/modules/auth'
 import {CurrentUser, ValidationErrors} from '@/types/domain'
 import {RootState} from '@/types/store'
 
@@ -93,11 +94,14 @@ export default Vue.extend({
   methods: {
     // Отправка формы регистрации
     onSubmit(): void {
-      const registerPromise = this.$store.dispatch(actionsTypes.register, {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      }) as Promise<CurrentUser>
+      const registerPromise = this.$store.dispatch(
+        getNamespacedType(authModuleName, actionTypes.register),
+        {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        }
+      ) as Promise<CurrentUser>
 
       registerPromise.then(() => {
         this.$router.push({name: 'globalfeed'})

@@ -6,14 +6,16 @@ import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы feed ============= */
 
+export const feedModuleName = 'feed'
+
 export const mutationTypes = {
-  getFeedStart: '[feed] Get feed start',
-  getFeedSuccess: '[feed] Get feed Success',
-  getFeedFailure: '[feed] Get feed Failure',
+  getFeedStart: 'getFeedStart',
+  getFeedSuccess: 'getFeedSuccess',
+  getFeedFailure: 'getFeedFailure',
 } as const
 
 export const actionTypes = {
-  getFeed: '[feed] Get feed',
+  getFeed: 'getFeed',
 } as const
 
 const state: FeedState = {
@@ -67,6 +69,7 @@ const actions: ActionTree<FeedState, RootState> = {
 }
 
 const feedModule: Module<FeedState, RootState> = {
+  namespaced: true,
   state,
   actions,
   mutations,

@@ -6,19 +6,21 @@ import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы article ============= */
 
-export const mutationTypes = {
-  getArticleStart: '[article] Get article Start',
-  getArticleSuccess: '[article] Get article Success',
-  getArticleFailure: '[article] Get article Failure',
+export const articleModuleName = 'article'
 
-  deleteArticleStart: '[article] delete article Start',
-  deleteArticleSuccess: '[article] delete article Success',
-  deleteArticleFailure: '[article] delete article Failure',
+export const mutationTypes = {
+  getArticleStart: 'getArticleStart',
+  getArticleSuccess: 'getArticleSuccess',
+  getArticleFailure: 'getArticleFailure',
+
+  deleteArticleStart: 'deleteArticleStart',
+  deleteArticleSuccess: 'deleteArticleSuccess',
+  deleteArticleFailure: 'deleteArticleFailure',
 } as const
 
 export const actionTypes = {
-  getArticle: '[article] Get article',
-  deleteArticle: '[article] delete article',
+  getArticle: 'getArticle',
+  deleteArticle: 'deleteArticle',
 } as const
 
 const state: ArticleState = {
@@ -94,6 +96,7 @@ const actions: ActionTree<ArticleState, RootState> = {
 }
 
 const articleModule: Module<ArticleState, RootState> = {
+  namespaced: true,
   state,
   actions,
   mutations,
