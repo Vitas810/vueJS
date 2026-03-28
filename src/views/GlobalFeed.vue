@@ -1,6 +1,5 @@
 <template>
   <div>
-    <mcv-banner />
     <section class="page-shell page-shell_compact">
       <div class="app-container page-grid">
         <div class="page-grid__main">
@@ -19,7 +18,6 @@
 import Vue from 'vue'
 import McvFeed from '@/components/Feed.vue'
 import McvPopularTags from '@/components/PopularTags.vue'
-import McvBanner from '@/components/Banner.vue'
 import McvFeedToggle from '@/components/FeedToggle.vue'
 
 interface GlobalFeedData {
@@ -31,7 +29,6 @@ export default Vue.extend({
   components: {
     McvFeed,
     McvPopularTags,
-    McvBanner,
     McvFeedToggle,
   },
   data(): GlobalFeedData {

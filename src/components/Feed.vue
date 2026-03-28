@@ -4,10 +4,30 @@
     <mcv-error-message v-if="error" :message="error" />
 
     <div v-if="feed" class="feed-list">
+      <div class="feed-controls">
+        <span class="feed-controls__label">Карточек на странице</span>
+        <div class="feed-controls__list">
+          <button
+            v-for="feedLimitOption in feedLimits"
+            :key="feedLimitOption"
+            type="button"
+            class="feed-controls__button"
+            :aria-pressed="String(currentLimit === feedLimitOption)"
+            :class="{
+              'feed-controls__button_active':
+                currentLimit === feedLimitOption,
+            }"
+            @click="setFeedLimit(feedLimitOption)"
+          >
+            {{ feedLimitOption }}
+          </button>
+        </div>
+      </div>
+
       <div
         class="feed-card surface-card"
-        v-for="article in feed.articles"
-        :key="article.slug"
+        v-for="(article, articleIndex) in feed.articles"
+        :key="`${article.slug}-${articleIndex}`"
       >
         <div class="feed-card__header">
           <router-link
@@ -15,10 +35,14 @@
             :to="{name: 'userProfile', params: {slug: article.author.username}}"
           >
             <img
+              v-if="article.author.image"
               :src="article.author.image"
               :alt="article.author.username"
               class="feed-card__avatar"
             />
+            <span v-else class="feed-card__avatar-fallback">
+              {{ getAuthorInitial(article.author.username) }}
+            </span>
             <span class="feed-card__meta-content">
               <span class="feed-card__author">{{
                 article.author.username
@@ -36,20 +60,42 @@
 
         <router-link
           :to="{name: 'article', params: {slug: article.slug}}"
+          class="feed-card__cover"
+          v-if="article.author.image"
+        >
+          <img
+            :src="article.author.image"
+            :alt="getArticleCoverAlt(article.author.username)"
+            class="feed-card__cover-image"
+          />
+        </router-link>
+
+        <router-link
+          :to="{name: 'article', params: {slug: article.slug}}"
           class="feed-card__link"
         >
+          <div class="feed-card__eyebrow">
+            <span class="feed-card__status">Статья</span>
+            <span class="feed-card__reading-time">
+              {{ getReadingTime(article.body) }} мин чтения
+            </span>
+          </div>
+
           <h2 class="feed-card__title">{{ article.title }}</h2>
           <p class="feed-card__description">{{ article.description }}</p>
+          <p class="feed-card__excerpt">
+            {{ getArticleExcerpt(article.body) }}
+          </p>
 
           <div class="feed-card__footer">
-            <span class="feed-card__more">Read article</span>
-            <mcv-tag-list :tags="article.tagList" />
+            <span class="feed-card__more">Читать статью</span>
+            <mcv-tag-list :tags="article.tagList" :max-visible="10" />
           </div>
         </router-link>
       </div>
       <mcv-pagination
         :total="feed.articlesCount"
-        :limit="limit"
+        :limit="currentLimit"
         :current-page="currentPage"
         :url="baseUrl"
       />
@@ -62,7 +108,7 @@ import Vue from 'vue'
 import {getNamespacedType} from '@/store/helpers/namespacedType'
 import {actionTypes, feedModuleName} from '@/store/modules/feed'
 import McvPagination from '@/components/Pagination.vue'
-import {limit} from '@/helpers/vars'
+import {defaultFeedLimit, feedLimitOptions} from '@/helpers/vars'
 import {buildFeedApiUrl} from '@/helpers/feedApiUrl'
 import McvLoading from '@/components/Loading.vue'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
@@ -71,9 +117,7 @@ import McvAddToFavorites from '@/components/AddToFavorites.vue'
 import {FeedResponse} from '@/types/domain'
 import {RootState} from '@/types/store'
 
-interface FeedData {
-  limit: number
-}
+type FeedLimitOption = (typeof feedLimitOptions)[number]
 
 export default Vue.extend({
   name: 'McvFeed',
@@ -89,11 +133,6 @@ export default Vue.extend({
     McvPagination,
     McvLoading,
     McvAddToFavorites,
-  },
-  data(): FeedData {
-    return {
-      limit,
-    }
   },
   computed: {
     // Флаг загрузки ленты
@@ -113,7 +152,29 @@ export default Vue.extend({
 
     // Текущая страница
     currentPage(): number {
-      return Number(this.$route.query.page || '1')
+      const routePageValue = Number(this.$route.query.page ?? '1')
+
+      if (!Number.isFinite(routePageValue) || routePageValue < 1) {
+        return 1
+      }
+
+      return Math.floor(routePageValue)
+    },
+
+    // Текущий лимит карточек
+    currentLimit(): FeedLimitOption {
+      const routeLimitValue = Number(this.$route.query.limit ?? defaultFeedLimit)
+
+      if (feedLimitOptions.includes(routeLimitValue as FeedLimitOption)) {
+        return routeLimitValue as FeedLimitOption
+      }
+
+      return defaultFeedLimit
+    },
+
+    // Доступные лимиты карточек
+    feedLimits(): number[] {
+      return [...feedLimitOptions]
     },
 
     // Базовый URL страницы
@@ -125,22 +186,109 @@ export default Vue.extend({
     currentPage(): void {
       this.fetchFeed()
     },
+    currentLimit(): void {
+      this.fetchFeed()
+    },
     apiUrl(): void {
       this.fetchFeed()
     },
   },
   mounted() {
+    this.ensureValidFeedQuery()
     this.fetchFeed()
   },
   methods: {
+    // Нормализация query параметров ленты
+    ensureValidFeedQuery(): boolean {
+      const currentPageQueryValue = this.getQueryStringValue(this.$route.query.page)
+      const currentLimitQueryValue = this.getQueryStringValue(
+        this.$route.query.limit
+      )
+      const normalizedPageQuery = String(this.currentPage)
+      const normalizedLimitQuery = String(this.currentLimit)
+
+      if (
+        currentPageQueryValue === normalizedPageQuery &&
+        currentLimitQueryValue === normalizedLimitQuery
+      ) {
+        return false
+      }
+
+      this.$router.replace({
+        path: this.baseUrl,
+        query: {
+          ...this.$route.query,
+          page: normalizedPageQuery,
+          limit: normalizedLimitQuery,
+        },
+      })
+
+      return true
+    },
+
+    // Получение строкового query значения
+    getQueryStringValue(queryValue: string | string[] | undefined): string | undefined {
+      if (typeof queryValue === 'string') {
+        return queryValue
+      }
+
+      if (Array.isArray(queryValue)) {
+        return queryValue[0]
+      }
+
+      return undefined
+    },
+
     // Загрузка ленты по текущим параметрам
     fetchFeed(): void {
-      const apiUrlWithParams = buildFeedApiUrl(this.apiUrl, this.currentPage)
+      const apiUrlWithParams = buildFeedApiUrl(
+        this.apiUrl,
+        this.currentPage,
+        this.currentLimit
+      )
 
       this.$store.dispatch(
         getNamespacedType(feedModuleName, actionTypes.getFeed),
         {apiUrl: apiUrlWithParams}
       )
+    },
+
+    // Обновление лимита карточек в URL
+    setFeedLimit(feedLimit: FeedLimitOption): void {
+      if (feedLimit === this.currentLimit) {
+        return
+      }
+
+      this.$router.push({
+        path: this.baseUrl,
+        query: {
+          ...this.$route.query,
+          page: '1',
+          limit: String(feedLimit),
+        },
+      })
+    },
+
+    // Текст alt для обложки карточки
+    getArticleCoverAlt(authorName: string): string {
+      return `Обложка автора ${authorName}`
+    },
+
+    // Короткий фрагмент статьи
+    getArticleExcerpt(articleBody: string): string {
+      return articleBody.slice(0, 140).trim()
+    },
+
+    // Оценка времени чтения
+    getReadingTime(articleBody: string): number {
+      const wordCount = articleBody.trim().split(/\s+/).filter(Boolean).length
+
+      return Math.max(1, Math.ceil(wordCount / 180))
+    },
+
+    // Первая буква автора
+    getAuthorInitial(authorName: string): string {
+      return authorName.slice(0, 1).toUpperCase()
     },
   },
 })

@@ -36,6 +36,7 @@
                 :to="{
                   name: 'userProfile',
                   params: {slug: userProfile.username},
+                  query: preservedFeedLimitQuery,
                 }"
                 class="feed-tabs__link"
                 :class="{'feed-tabs__link_active': routeName === 'userProfile'}"
@@ -47,6 +48,7 @@
                 :to="{
                   name: 'userProfileFavorites',
                   params: {slug: userProfile.username},
+                  query: preservedFeedLimitQuery,
                 }"
                 class="feed-tabs__link"
                 :class="{
@@ -139,6 +141,20 @@ export default Vue.extend({
     // Имя текущего маршрута
     routeName(): string {
       return String(this.$route.name ?? '')
+    },
+
+    // Сохранение лимита карточек между вкладками профиля
+    preservedFeedLimitQuery(): {limit: string} | undefined {
+      const limitQueryValue = this.$route.query.limit
+      const normalizedLimitQueryValue = Array.isArray(limitQueryValue)
+        ? limitQueryValue[0]
+        : limitQueryValue
+
+      if (typeof normalizedLimitQueryValue !== 'string') {
+        return undefined
+      }
+
+      return {limit: normalizedLimitQueryValue}
     },
   },
   watch: {
