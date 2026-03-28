@@ -1,4 +1,4 @@
-import { ValidationErrors } from '@/types/domain'
+import {ValidationErrors} from '@/types/domain'
 
 /* =============== Работа с ошибками API ============= */
 

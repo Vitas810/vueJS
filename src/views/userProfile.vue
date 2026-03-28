@@ -35,7 +35,7 @@
               <router-link
                 :to="{
                   name: 'userProfile',
-                  params: { slug: userProfile.username },
+                  params: {slug: userProfile.username},
                 }"
                 class="feed-tabs__link"
                 :class="{'feed-tabs__link_active': routeName === 'userProfile'}"
@@ -46,11 +46,12 @@
               <router-link
                 :to="{
                   name: 'userProfileFavorites',
-                  params: { slug: userProfile.username },
+                  params: {slug: userProfile.username},
                 }"
                 class="feed-tabs__link"
                 :class="{
-                  'feed-tabs__link_active': routeName === 'userProfileFavorites',
+                  'feed-tabs__link_active':
+                    routeName === 'userProfileFavorites',
                 }"
               >
                 Favorite Posts
@@ -67,13 +68,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { actionTypes as userProfileActionTypes } from '@/store/modules/userProfile'
-import { getterTypes as authGetterTypes } from '@/store/modules/auth'
+import {actionTypes as userProfileActionTypes} from '@/store/modules/userProfile'
+import {getterTypes as authGetterTypes} from '@/store/modules/auth'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
 import McvFeed from '@/components/Feed.vue'
 import McvLoading from '@/components/Loading.vue'
-import { CurrentUser, Profile } from '@/types/domain'
-import { RootState } from '@/types/store'
+import {CurrentUser, Profile} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 export default Vue.extend({
   name: 'McvUserProfile',
@@ -100,7 +101,9 @@ export default Vue.extend({
 
     // Текущий пользователь
     currentUser(): CurrentUser | null {
-      return this.$store.getters[authGetterTypes.currentUser] as CurrentUser | null
+      return this.$store.getters[
+        authGetterTypes.currentUser
+      ] as CurrentUser | null
     },
 
     // Проверка владельца профиля

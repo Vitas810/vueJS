@@ -1,5 +1,5 @@
 import axios from '@/api/axios'
-import { Article, ArticleFormValues } from '@/types/domain'
+import {Article, ArticleFormValues} from '@/types/domain'
 
 /* =============== API статьи ============= */
 
@@ -22,7 +22,7 @@ function deleteArticle(slug: string) {
 // Создание статьи
 function createArticle(articleInput: ArticleFormValues): Promise<Article> {
   return axios
-    .post<ArticleResponse>('/articles', { article: articleInput })
+    .post<ArticleResponse>('/articles', {article: articleInput})
     .then((response) => response.data.article)
 }
 
@@ -32,7 +32,7 @@ function updateArticle(
   articleInput: ArticleFormValues
 ): Promise<Article> {
   return axios
-    .put<ArticleResponse>(`/articles/${slug}`, { article: articleInput })
+    .put<ArticleResponse>(`/articles/${slug}`, {article: articleInput})
     .then((response) => response.data.article)
 }
 

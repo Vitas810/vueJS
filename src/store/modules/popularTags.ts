@@ -1,7 +1,7 @@
-import { ActionTree, Module, MutationTree } from 'vuex'
+import {ActionTree, Module, MutationTree} from 'vuex'
 import popularTagsApi from '@/api/popularTags'
-import { PopularTagsState, RootState } from '@/types/store'
-import { getErrorMessage } from '@/helpers/error'
+import {PopularTagsState, RootState} from '@/types/store'
+import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы popularTags ============= */
 
@@ -43,7 +43,7 @@ const mutations: MutationTree<PopularTagsState> = {
 /* =============== Actions ============= */
 
 const actions: ActionTree<PopularTagsState, RootState> = {
-  async [actionTypes.getPopularTags]({ commit }): Promise<string[]> {
+  async [actionTypes.getPopularTags]({commit}): Promise<string[]> {
     commit(mutationTypes.getPopularTagsStart)
 
     try {

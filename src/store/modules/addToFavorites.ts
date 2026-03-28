@@ -1,7 +1,7 @@
-import { ActionTree, Module, MutationTree } from 'vuex'
+import {ActionTree, Module, MutationTree} from 'vuex'
 import addToFavoritesApi from '@/api/addToFavorites'
-import { Article } from '@/types/domain'
-import { AddToFavoritesState, RootState } from '@/types/store'
+import {Article} from '@/types/domain'
+import {AddToFavoritesState, RootState} from '@/types/store'
 
 /* =============== Типы addToFavorites ============= */
 
@@ -42,8 +42,8 @@ interface AddToFavoritesPayload {
 
 const actions: ActionTree<AddToFavoritesState, RootState> = {
   async [actionTypes.addToFavorites](
-    { commit },
-    { slug, isFavorited }: AddToFavoritesPayload
+    {commit},
+    {slug, isFavorited}: AddToFavoritesPayload
   ): Promise<Article> {
     commit(mutationsTypes.addToFavoritesStart)
 

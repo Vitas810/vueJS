@@ -9,7 +9,7 @@ import editArticle from '@/store/modules/editArticle'
 import settings from '@/store/modules/settings'
 import addToFavorites from '@/store/modules/addToFavorites'
 import userProfile from '@/store/modules/userProfile'
-import { RootState } from '@/types/store'
+import {RootState} from '@/types/store'
 
 /* =============== Инициализация store ============= */
 

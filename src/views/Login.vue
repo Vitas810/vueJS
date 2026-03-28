@@ -47,9 +47,9 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvValidationErrors from '@/components/ValidationErrors.vue'
-import { actionsTypes } from '@/store/modules/auth'
-import { CurrentUser, ValidationErrors } from '@/types/domain'
-import { RootState } from '@/types/store'
+import {actionsTypes} from '@/store/modules/auth'
+import {CurrentUser, ValidationErrors} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 interface LoginData {
   email: string
@@ -87,7 +87,7 @@ export default Vue.extend({
       }) as Promise<CurrentUser>
 
       loginPromise.then(() => {
-        this.$router.push({ name: 'globalfeed' })
+        this.$router.push({name: 'globalfeed'})
       })
     },
   },

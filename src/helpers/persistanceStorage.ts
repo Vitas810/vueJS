@@ -26,3 +26,12 @@ export function setItem(key: StorageKey, data: unknown): void {
     return
   }
 }
+
+// Удаление данных из localStorage
+export function removeItem(key: StorageKey): void {
+  try {
+    localStorage.removeItem(key)
+  } catch {
+    return
+  }
+}

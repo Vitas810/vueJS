@@ -1,6 +1,6 @@
-import { Module, MutationTree } from 'vuex'
-import { ValidationErrors } from '@/types/domain'
-import { RootState, SettingsState } from '@/types/store'
+import {Module, MutationTree} from 'vuex'
+import {ValidationErrors} from '@/types/domain'
+import {RootState, SettingsState} from '@/types/store'
 
 /* =============== Типы мутаций модуля settings ============= */
 

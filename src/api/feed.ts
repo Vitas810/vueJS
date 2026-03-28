@@ -1,6 +1,6 @@
-import { AxiosResponse } from 'axios'
+import {AxiosResponse} from 'axios'
 import axios from '@/api/axios'
-import { FeedResponse } from '@/types/domain'
+import {FeedResponse} from '@/types/domain'
 
 /* =============== API ленты ============= */
 

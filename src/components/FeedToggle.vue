@@ -20,7 +20,7 @@
 
       <router-link
         v-if="tagName"
-        :to="{name: 'tag', params: { slug: tagName }}"
+        :to="{name: 'tag', params: {slug: tagName}}"
         class="feed-tabs__link"
         :class="{'feed-tabs__link_active': routeName === 'tag'}"
       >
@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import { getterTypes } from '@/store/modules/auth'
+import {getterTypes} from '@/store/modules/auth'
 
 export default Vue.extend({
   name: 'McvFeedToggle',

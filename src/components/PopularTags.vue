@@ -21,10 +21,10 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { actionTypes } from '@/store/modules/popularTags'
+import {actionTypes} from '@/store/modules/popularTags'
 import McvLoading from '@/components/Loading.vue'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
-import { RootState } from '@/types/store'
+import {RootState} from '@/types/store'
 
 export default Vue.extend({
   name: 'McvPopularTags',

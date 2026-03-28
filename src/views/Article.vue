@@ -8,7 +8,10 @@
           <div class="article-hero__meta">
             <div class="article-page__author">
               <router-link
-                :to="{name: 'userProfile', params: {slug: article.author.username}}"
+                :to="{
+                  name: 'userProfile',
+                  params: {slug: article.author.username},
+                }"
               >
                 <img
                   :src="article.author.image"
@@ -19,7 +22,10 @@
 
               <div>
                 <router-link
-                  :to="{name: 'userProfile', params: {slug: article.author.username}}"
+                  :to="{
+                    name: 'userProfile',
+                    params: {slug: article.author.username},
+                  }"
                   class="article-page__author-name"
                 >
                   {{ article.author.username }}
@@ -67,13 +73,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import { actionTypes as articleActionTypes } from '@/store/modules/article'
-import { getterTypes as authGetterTypes } from '@/store/modules/auth'
+import {actionTypes as articleActionTypes} from '@/store/modules/article'
+import {getterTypes as authGetterTypes} from '@/store/modules/auth'
 import McvLoading from '@/components/Loading.vue'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
 import McvTagList from '@/components/Taglist.vue'
-import { Article, CurrentUser } from '@/types/domain'
-import { RootState } from '@/types/store'
+import {Article, CurrentUser} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 export default Vue.extend({
   name: 'McvArticle',
@@ -101,7 +107,9 @@ export default Vue.extend({
 
     // Текущий пользователь
     currentUser(): CurrentUser | null {
-      return this.$store.getters[authGetterTypes.currentUser] as CurrentUser | null
+      return this.$store.getters[
+        authGetterTypes.currentUser
+      ] as CurrentUser | null
     },
 
     // Признак автора статьи
@@ -126,19 +134,22 @@ export default Vue.extend({
   watch: {
     articleSlug(slug: string): void {
       if (slug) {
-        this.$store.dispatch(articleActionTypes.getArticle, { slug })
+        this.$store.dispatch(articleActionTypes.getArticle, {slug})
       }
     },
   },
   methods: {
     // Удаление статьи
     deleteArticle(): void {
-      const deletePromise = this.$store.dispatch(articleActionTypes.deleteArticle, {
-        slug: this.articleSlug,
-      }) as Promise<void>
+      const deletePromise = this.$store.dispatch(
+        articleActionTypes.deleteArticle,
+        {
+          slug: this.articleSlug,
+        }
+      ) as Promise<void>
 
       deletePromise.then(() => {
-        this.$router.push({ name: 'globalfeed' })
+        this.$router.push({name: 'globalfeed'})
       })
     },
   },

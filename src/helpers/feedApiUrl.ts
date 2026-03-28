@@ -1,5 +1,5 @@
-import { parseUrl, stringify } from 'query-string'
-import { limit } from '@/helpers/vars'
+import {parseUrl, stringify} from 'query-string'
+import {limit} from '@/helpers/vars'
 
 /* =============== Построение URL ленты для API ============= */
 

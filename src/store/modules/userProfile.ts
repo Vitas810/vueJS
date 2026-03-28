@@ -1,8 +1,8 @@
-import { ActionTree, Module, MutationTree } from 'vuex'
+import {ActionTree, Module, MutationTree} from 'vuex'
 import userProfileApi from '@/api/userProfile'
-import { Profile } from '@/types/domain'
-import { RootState, UserProfileState } from '@/types/store'
-import { getErrorMessage } from '@/helpers/error'
+import {Profile} from '@/types/domain'
+import {RootState, UserProfileState} from '@/types/store'
+import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы userProfile ============= */
 
@@ -49,8 +49,8 @@ interface UserProfilePayload {
 
 const actions: ActionTree<UserProfileState, RootState> = {
   async [actionTypes.getUserProfile](
-    { commit },
-    { slug }: UserProfilePayload
+    {commit},
+    {slug}: UserProfilePayload
   ): Promise<Profile> {
     commit(mutationTypes.getUserProfileStart)
 

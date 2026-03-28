@@ -1,4 +1,4 @@
-import { mutationTypes } from '@/store/modules/settings'
+import {mutationTypes} from '@/store/modules/settings'
 
 describe('settings module', () => {
   it('имеет собственные строки мутаций без префикса auth', () => {

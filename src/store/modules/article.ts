@@ -1,8 +1,8 @@
-import { ActionTree, Module, MutationTree } from 'vuex'
+import {ActionTree, Module, MutationTree} from 'vuex'
 import articleApi from '@/api/article'
-import { Article } from '@/types/domain'
-import { ArticleState, RootState } from '@/types/store'
-import { getErrorMessage } from '@/helpers/error'
+import {Article} from '@/types/domain'
+import {ArticleState, RootState} from '@/types/store'
+import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы article ============= */
 
@@ -64,7 +64,7 @@ interface ArticleSlugPayload {
 }
 
 const actions: ActionTree<ArticleState, RootState> = {
-  async [actionTypes.getArticle]({ commit }, { slug }: ArticleSlugPayload) {
+  async [actionTypes.getArticle]({commit}, {slug}: ArticleSlugPayload) {
     commit(mutationTypes.getArticleStart)
 
     try {
@@ -80,7 +80,7 @@ const actions: ActionTree<ArticleState, RootState> = {
       throw error
     }
   },
-  async [actionTypes.deleteArticle]({ commit }, { slug }: ArticleSlugPayload) {
+  async [actionTypes.deleteArticle]({commit}, {slug}: ArticleSlugPayload) {
     commit(mutationTypes.deleteArticleStart)
 
     try {

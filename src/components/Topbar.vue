@@ -72,8 +72,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import { getterTypes } from '@/store/modules/auth'
-import { CurrentUser } from '@/types/domain'
+import {getterTypes} from '@/store/modules/auth'
+import {CurrentUser} from '@/types/domain'
 
 export default Vue.extend({
   name: 'McvTopbar',

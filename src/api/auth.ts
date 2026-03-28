@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios'
+import {AxiosResponse} from 'axios'
 import axios from '@/api/axios'
 import {
   CurrentUser,
@@ -17,14 +17,14 @@ interface UserResponse {
 function register(
   credentials: RegisterCredentials
 ): Promise<AxiosResponse<UserResponse>> {
-  return axios.post('/users', { user: credentials })
+  return axios.post('/users', {user: credentials})
 }
 
 // Вход пользователя
 function login(
   credentials: LoginCredentials
 ): Promise<AxiosResponse<UserResponse>> {
-  return axios.post('/users/login', { user: credentials })
+  return axios.post('/users/login', {user: credentials})
 }
 
 // Текущий пользователь
@@ -33,9 +33,11 @@ function getCurrentUser(): Promise<AxiosResponse<UserResponse>> {
 }
 
 // Обновление профиля
-function updateCurrentUser(currentUserInput: CurrentUserInput): Promise<CurrentUser> {
+function updateCurrentUser(
+  currentUserInput: CurrentUserInput
+): Promise<CurrentUser> {
   return axios
-    .put<UserResponse>('/user', { user: currentUserInput })
+    .put<UserResponse>('/user', {user: currentUserInput})
     .then((response) => response.data.user)
 }
 

@@ -1,28 +1,24 @@
 <template>
-    <div>
-        <mcv-loading v-if="isLoading" />
-        <mcv-article-form
-            v-if="initialValues"
-            :initialValues="initialValues"
-            :errors="validationErrors"
-            :isSubmitting="isSubmitting"
-            @articleSubmit="onSubmit"
-        >
-        </mcv-article-form>
-    </div>
+  <div>
+    <mcv-loading v-if="isLoading" />
+    <mcv-article-form
+      v-if="initialValues"
+      :initialValues="initialValues"
+      :errors="validationErrors"
+      :isSubmitting="isSubmitting"
+      @articleSubmit="onSubmit"
+    >
+    </mcv-article-form>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import McvArticleForm from '@/components/ArticleForm.vue'
 import McvLoading from '@/components/Loading.vue'
-import { actionTypes } from '@/store/modules/editArticle'
-import {
-  Article,
-  ArticleFormValues,
-  ValidationErrors,
-} from '@/types/domain'
-import { RootState } from '@/types/store'
+import {actionTypes} from '@/store/modules/editArticle'
+import {Article, ArticleFormValues, ValidationErrors} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 export default Vue.extend({
   name: 'McvEditArticle',
@@ -94,7 +90,7 @@ export default Vue.extend({
       }) as Promise<Article>
 
       updatePromise.then((article) => {
-        this.$router.push({ name: 'article', params: { slug: article.slug } })
+        this.$router.push({name: 'article', params: {slug: article.slug}})
       })
     },
   },

@@ -1,4 +1,4 @@
-import { buildFeedApiUrl } from '@/helpers/feedApiUrl'
+import {buildFeedApiUrl} from '@/helpers/feedApiUrl'
 
 describe('buildFeedApiUrl', () => {
   it('добавляет limit и offset для первой страницы', () => {

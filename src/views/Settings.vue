@@ -71,7 +71,11 @@
         </form>
 
         <div class="settings-page__logout">
-          <button class="app-button app-button_danger" @click="logout" type="button">
+          <button
+            class="app-button app-button_danger"
+            @click="logout"
+            type="button"
+          >
             Logout
           </button>
         </div>
@@ -87,12 +91,8 @@ import {
   actionsTypes as authActionTypes,
 } from '@/store/modules/auth'
 import McvValidationErrors from '@/components/ValidationErrors.vue'
-import {
-  CurrentUser,
-  CurrentUserInput,
-  ValidationErrors,
-} from '@/types/domain'
-import { RootState } from '@/types/store'
+import {CurrentUser, CurrentUserInput, ValidationErrors} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 interface SettingsData {
   form: CurrentUserInput
@@ -110,7 +110,7 @@ function createEmptySettingsForm(): CurrentUserInput {
 
 export default Vue.extend({
   name: 'McvSettings',
-  components: { McvValidationErrors },
+  components: {McvValidationErrors},
   data(): SettingsData {
     return {
       form: createEmptySettingsForm(),
@@ -129,7 +129,9 @@ export default Vue.extend({
 
     // Текущий пользователь
     currentUser(): CurrentUser | null {
-      return this.$store.getters[authGetterTypes.currentUser] as CurrentUser | null
+      return this.$store.getters[
+        authGetterTypes.currentUser
+      ] as CurrentUser | null
     },
   },
   watch: {
@@ -156,7 +158,7 @@ export default Vue.extend({
     // Отправка формы настроек
     onSubmit(): void {
       this.$store.dispatch(authActionTypes.updateCurrentUser, {
-        currentUserInput: { ...this.form },
+        currentUserInput: {...this.form},
       })
     },
 
@@ -167,7 +169,7 @@ export default Vue.extend({
       ) as Promise<void>
 
       logoutPromise.then(() => {
-        this.$router.push({ name: 'globalfeed' })
+        this.$router.push({name: 'globalfeed'})
       })
     },
   },

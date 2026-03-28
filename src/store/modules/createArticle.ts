@@ -1,8 +1,8 @@
-import { ActionTree, Module, MutationTree } from 'vuex'
+import {ActionTree, Module, MutationTree} from 'vuex'
 import articleApi from '@/api/article'
-import { Article, ArticleFormValues } from '@/types/domain'
-import { CreateArticleState, RootState } from '@/types/store'
-import { getValidationErrors } from '@/helpers/error'
+import {Article, ArticleFormValues} from '@/types/domain'
+import {CreateArticleState, RootState} from '@/types/store'
+import {getValidationErrors} from '@/helpers/error'
 
 /* =============== Типы createArticle ============= */
 
@@ -45,8 +45,8 @@ interface CreateArticlePayload {
 
 const actions: ActionTree<CreateArticleState, RootState> = {
   async [actionTypes.createArticle](
-    { commit },
-    { articleInput }: CreateArticlePayload
+    {commit},
+    {articleInput}: CreateArticlePayload
   ): Promise<Article> {
     commit(mutationTypes.createArticleStart)
 
