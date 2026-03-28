@@ -1,5 +1,5 @@
 import axios from '@/api/axios'
-import { Article } from '@/types/domain'
+import {Article} from '@/types/domain'
 
 /* =============== API избранного ============= */
 

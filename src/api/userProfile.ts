@@ -1,5 +1,5 @@
 import axios from '@/api/axios'
-import { Profile } from '@/types/domain'
+import {Profile} from '@/types/domain'
 
 /* =============== API профиля ============= */
 

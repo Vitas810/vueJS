@@ -62,9 +62,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import Vue, {PropType} from 'vue'
 import McvValidationErrors from '@/components/ValidationErrors.vue'
-import { ArticleFormValues, ValidationErrors } from '@/types/domain'
+import {ArticleFormValues, ValidationErrors} from '@/types/domain'
 
 interface ArticleFormData {
   title: string
@@ -75,7 +75,7 @@ interface ArticleFormData {
 
 export default Vue.extend({
   name: 'McvArticleForm',
-  components: { McvValidationErrors },
+  components: {McvValidationErrors},
   props: {
     initialValues: {
       type: Object as PropType<ArticleFormValues>,

@@ -1,8 +1,8 @@
-import { ActionTree, Module, MutationTree } from 'vuex'
+import {ActionTree, Module, MutationTree} from 'vuex'
 import feedApi from '@/api/feed'
-import { FeedResponse } from '@/types/domain'
-import { RootState, FeedState } from '@/types/store'
-import { getErrorMessage } from '@/helpers/error'
+import {FeedResponse} from '@/types/domain'
+import {RootState, FeedState} from '@/types/store'
+import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы feed ============= */
 
@@ -48,7 +48,7 @@ interface GetFeedPayload {
 }
 
 const actions: ActionTree<FeedState, RootState> = {
-  async [actionTypes.getFeed]({ commit }, { apiUrl }: GetFeedPayload) {
+  async [actionTypes.getFeed]({commit}, {apiUrl}: GetFeedPayload) {
     commit(mutationTypes.getFeedStart)
 
     try {

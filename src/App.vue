@@ -10,7 +10,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvTopbar from '@/components/Topbar.vue'
-import { actionsTypes } from '@/store/modules/auth'
+import {hasAccessToken} from '@/helpers/accessToken'
+import {actionsTypes} from '@/store/modules/auth'
 
 export default Vue.extend({
   name: 'McvApp',
@@ -18,6 +19,10 @@ export default Vue.extend({
     McvTopbar,
   },
   mounted() {
+    if (!hasAccessToken()) {
+      return
+    }
+
     this.$store.dispatch(actionsTypes.getCurrentUser)
   },
 })

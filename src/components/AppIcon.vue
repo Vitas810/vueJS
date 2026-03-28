@@ -91,15 +91,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import Vue, {PropType} from 'vue'
 
-type AppIconName =
-  | 'compose'
-  | 'settings'
-  | 'hash'
-  | 'heart'
-  | 'edit'
-  | 'delete'
+type AppIconName = 'compose' | 'settings' | 'hash' | 'heart' | 'edit' | 'delete'
 
 export default Vue.extend({
   name: 'McvAppIcon',

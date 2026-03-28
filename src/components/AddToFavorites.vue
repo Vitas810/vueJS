@@ -15,8 +15,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import { actionTypes } from '@/store/modules/addToFavorites'
-import { Article } from '@/types/domain'
+import {actionTypes} from '@/store/modules/addToFavorites'
+import {Article} from '@/types/domain'
 
 interface AddToFavoritesData {
   isFavoritesOptimistic: boolean

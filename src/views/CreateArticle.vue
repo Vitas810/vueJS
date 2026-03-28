@@ -1,18 +1,18 @@
 <template>
-    <mcv-article-form
-        :initial-values="initialValues"
-        :errors="validationErrors"
-        :is-submitting="isSubmitting"
-        @articleSubmit="onSubmit"
-    />
+  <mcv-article-form
+    :initial-values="initialValues"
+    :errors="validationErrors"
+    :is-submitting="isSubmitting"
+    @articleSubmit="onSubmit"
+  />
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import McvArticleForm from '@/components/ArticleForm.vue'
-import { actionTypes } from '@/store/modules/createArticle'
-import { Article, ArticleFormValues, ValidationErrors } from '@/types/domain'
-import { RootState } from '@/types/store'
+import {actionTypes} from '@/store/modules/createArticle'
+import {Article, ArticleFormValues, ValidationErrors} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 interface CreateArticleData {
   initialValues: ArticleFormValues
@@ -20,7 +20,7 @@ interface CreateArticleData {
 
 export default Vue.extend({
   name: 'McvCreateArticle',
-  components: { McvArticleForm },
+  components: {McvArticleForm},
   data(): CreateArticleData {
     return {
       initialValues: {
@@ -50,7 +50,7 @@ export default Vue.extend({
       }) as Promise<Article>
 
       createPromise.then((article) => {
-        this.$router.push({ name: 'article', params: { slug: article.slug } })
+        this.$router.push({name: 'article', params: {slug: article.slug}})
       })
     },
   },

@@ -20,7 +20,9 @@
               class="feed-card__avatar"
             />
             <span class="feed-card__meta-content">
-              <span class="feed-card__author">{{ article.author.username }}</span>
+              <span class="feed-card__author">{{
+                article.author.username
+              }}</span>
               <span class="feed-card__date">{{ article.createdAt }}</span>
             </span>
           </router-link>
@@ -57,16 +59,16 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { actionTypes } from '@/store/modules/feed'
+import {actionTypes} from '@/store/modules/feed'
 import McvPagination from '@/components/Pagination.vue'
-import { limit } from '@/helpers/vars'
-import { buildFeedApiUrl } from '@/helpers/feedApiUrl'
+import {limit} from '@/helpers/vars'
+import {buildFeedApiUrl} from '@/helpers/feedApiUrl'
 import McvLoading from '@/components/Loading.vue'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
 import McvTagList from '@/components/Taglist.vue'
 import McvAddToFavorites from '@/components/AddToFavorites.vue'
-import { FeedResponse } from '@/types/domain'
-import { RootState } from '@/types/store'
+import {FeedResponse} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 interface FeedData {
   limit: number
@@ -134,7 +136,7 @@ export default Vue.extend({
     fetchFeed(): void {
       const apiUrlWithParams = buildFeedApiUrl(this.apiUrl, this.currentPage)
 
-      this.$store.dispatch(actionTypes.getFeed, { apiUrl: apiUrlWithParams })
+      this.$store.dispatch(actionTypes.getFeed, {apiUrl: apiUrlWithParams})
     },
   },
 })

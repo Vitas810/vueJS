@@ -1,8 +1,8 @@
-import { ActionTree, Module, MutationTree } from 'vuex'
+import {ActionTree, Module, MutationTree} from 'vuex'
 import articleApi from '@/api/article'
-import { Article, ArticleFormValues } from '@/types/domain'
-import { EditArticleState, RootState } from '@/types/store'
-import { getValidationErrors } from '@/helpers/error'
+import {Article, ArticleFormValues} from '@/types/domain'
+import {EditArticleState, RootState} from '@/types/store'
+import {getValidationErrors} from '@/helpers/error'
 
 /* =============== Типы editArticle ============= */
 
@@ -69,8 +69,8 @@ interface ArticleSlugPayload {
 
 const actions: ActionTree<EditArticleState, RootState> = {
   async [actionTypes.updateArticle](
-    { commit },
-    { slug, articleInput }: UpdateArticlePayload
+    {commit},
+    {slug, articleInput}: UpdateArticlePayload
   ): Promise<Article> {
     commit(mutationTypes.updateArticleStart)
 
@@ -85,8 +85,8 @@ const actions: ActionTree<EditArticleState, RootState> = {
     }
   },
   async [actionTypes.getArticle](
-    { commit },
-    { slug }: ArticleSlugPayload
+    {commit},
+    {slug}: ArticleSlugPayload
   ): Promise<Article> {
     commit(mutationTypes.getArticleStart)
 

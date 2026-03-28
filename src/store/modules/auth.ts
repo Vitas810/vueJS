@@ -1,15 +1,15 @@
-import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
+import {ActionTree, GetterTree, Module, MutationTree} from 'vuex'
 import authApi from '@/api/auth'
-import { setItem } from '@/helpers/persistanceStorage'
-import { getValidationErrors } from '@/helpers/error'
-import { mutationTypes as settingsMutationTypes } from '@/store/modules/settings'
+import {removeItem, setItem} from '@/helpers/persistanceStorage'
+import {getValidationErrors} from '@/helpers/error'
+import {mutationTypes as settingsMutationTypes} from '@/store/modules/settings'
 import {
   CurrentUser,
   CurrentUserInput,
   LoginCredentials,
   RegisterCredentials,
 } from '@/types/domain'
-import { AuthState, RootState } from '@/types/store'
+import {AuthState, RootState} from '@/types/store'
 
 /* =============== Типы auth ============= */
 
@@ -114,7 +114,10 @@ const mutations: MutationTree<AuthState> = {
   [mutationsTypes.updateCurrentUserStart](currentState) {
     currentState.validationErrors = null
   },
-  [mutationsTypes.updateCurrentUserSuccess](currentState, payload: CurrentUser) {
+  [mutationsTypes.updateCurrentUserSuccess](
+    currentState,
+    payload: CurrentUser
+  ) {
     currentState.currentUser = payload
   },
   [mutationsTypes.updateCurrentUserFailure](currentState, payload) {
@@ -134,7 +137,7 @@ interface UpdateCurrentUserPayload {
 
 const actions: ActionTree<AuthState, RootState> = {
   async [actionsTypes.register](
-    { commit },
+    {commit},
     credentials: RegisterCredentials
   ): Promise<CurrentUser> {
     commit(mutationsTypes.registerStart)
@@ -153,7 +156,7 @@ const actions: ActionTree<AuthState, RootState> = {
     }
   },
   async [actionsTypes.login](
-    { commit },
+    {commit},
     credentials: LoginCredentials
   ): Promise<CurrentUser> {
     commit(mutationsTypes.loginStart)
@@ -171,7 +174,7 @@ const actions: ActionTree<AuthState, RootState> = {
       throw error
     }
   },
-  async [actionsTypes.getCurrentUser]({ commit }): Promise<CurrentUser> {
+  async [actionsTypes.getCurrentUser]({commit}): Promise<CurrentUser> {
     commit(mutationsTypes.getCurrentUserStart)
 
     try {
@@ -186,8 +189,8 @@ const actions: ActionTree<AuthState, RootState> = {
     }
   },
   async [actionsTypes.updateCurrentUser](
-    { commit },
-    { currentUserInput }: UpdateCurrentUserPayload
+    {commit},
+    {currentUserInput}: UpdateCurrentUserPayload
   ): Promise<CurrentUser> {
     commit(mutationsTypes.updateCurrentUserStart)
     commit(settingsMutationTypes.updateSettingsFormStart)
@@ -208,8 +211,8 @@ const actions: ActionTree<AuthState, RootState> = {
       throw error
     }
   },
-  async [actionsTypes.logout]({ commit }): Promise<void> {
-    setItem('accessToken', '')
+  async [actionsTypes.logout]({commit}): Promise<void> {
+    removeItem('accessToken')
     commit(mutationsTypes.logout)
   },
 }

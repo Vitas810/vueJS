@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import { ValidationErrors } from '@/types/domain'
+import Vue, {PropType} from 'vue'
+import {ValidationErrors} from '@/types/domain'
 
 export default Vue.extend({
   name: 'McvValidationErrors',

@@ -4,7 +4,7 @@
       <router-link
         :to="{path: url, query: {page: page}}"
         class="pagination__link"
-        :class="{'pagination__link_active': currentPage === page}"
+        :class="{pagination__link_active: currentPage === page}"
       >
         {{ page }}
       </router-link>
@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { range } from '@/helpers/utils'
+import {range} from '@/helpers/utils'
 
 export default Vue.extend({
   name: 'McvPagination',
