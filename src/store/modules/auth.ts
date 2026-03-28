@@ -2,12 +2,12 @@ import {ActionTree, GetterTree, Module, MutationTree} from 'vuex'
 import authApi from '@/api/auth'
 import {removeItem, setItem} from '@/helpers/persistanceStorage'
 import {getValidationErrors} from '@/helpers/error'
-import {mutationTypes as settingsMutationTypes} from '@/store/modules/settings'
 import {
   CurrentUser,
   CurrentUserInput,
   LoginCredentials,
   RegisterCredentials,
+  ValidationErrors,
 } from '@/types/domain'
 import {AuthState, RootState} from '@/types/store'
 
@@ -34,10 +34,7 @@ export const mutationsTypes = {
   getCurrentUserSuccess: '[auth] getCurrentUserSuccess',
   getCurrentUserFailure: '[auth] getCurrentUserFailure',
 
-  updateCurrentUserStart: '[auth] updateCurrentUserStart',
   updateCurrentUserSuccess: '[auth] updateCurrentUserSuccess',
-  updateCurrentUserFailure: '[auth] updateCurrentUserFailure',
-
   logout: '[auth] logout',
 } as const
 
@@ -81,7 +78,10 @@ const mutations: MutationTree<AuthState> = {
     currentState.currentUser = payload
     currentState.isLoggedIn = true
   },
-  [mutationsTypes.registerFailure](currentState, payload) {
+  [mutationsTypes.registerFailure](
+    currentState,
+    payload: ValidationErrors | null
+  ) {
     currentState.isSubmiting = false
     currentState.validationErrors = payload
   },
@@ -94,7 +94,10 @@ const mutations: MutationTree<AuthState> = {
     currentState.currentUser = payload
     currentState.isLoggedIn = true
   },
-  [mutationsTypes.loginFailure](currentState, payload) {
+  [mutationsTypes.loginFailure](
+    currentState,
+    payload: ValidationErrors | null
+  ) {
     currentState.isSubmiting = false
     currentState.validationErrors = payload
   },
@@ -111,17 +114,11 @@ const mutations: MutationTree<AuthState> = {
     currentState.isLoggedIn = false
     currentState.currentUser = null
   },
-  [mutationsTypes.updateCurrentUserStart](currentState) {
-    currentState.validationErrors = null
-  },
   [mutationsTypes.updateCurrentUserSuccess](
     currentState,
     payload: CurrentUser
   ) {
     currentState.currentUser = payload
-  },
-  [mutationsTypes.updateCurrentUserFailure](currentState, payload) {
-    currentState.validationErrors = payload
   },
   [mutationsTypes.logout](currentState) {
     currentState.currentUser = null
@@ -192,24 +189,12 @@ const actions: ActionTree<AuthState, RootState> = {
     {commit},
     {currentUserInput}: UpdateCurrentUserPayload
   ): Promise<CurrentUser> {
-    commit(mutationsTypes.updateCurrentUserStart)
-    commit(settingsMutationTypes.updateSettingsFormStart)
+    const user = await authApi.updateCurrentUser(currentUserInput)
 
-    try {
-      const user = await authApi.updateCurrentUser(currentUserInput)
+    commit(mutationsTypes.updateCurrentUserSuccess, user)
+    setItem('accessToken', user.token)
 
-      commit(mutationsTypes.updateCurrentUserSuccess, user)
-      commit(settingsMutationTypes.updateSettingsFormSuccess)
-      setItem('accessToken', user.token)
-
-      return user
-    } catch (error) {
-      const validationErrors = getValidationErrors(error)
-
-      commit(mutationsTypes.updateCurrentUserFailure, validationErrors)
-      commit(settingsMutationTypes.updateSettingsFormFailure, validationErrors)
-      throw error
-    }
+    return user
   },
   async [actionsTypes.logout]({commit}): Promise<void> {
     removeItem('accessToken')

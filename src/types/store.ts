@@ -52,12 +52,6 @@ export interface EditArticleState {
   article: Article | null
 }
 
-// Состояние настроек
-export interface SettingsState {
-  isSubmitting: boolean
-  validationErrors: ValidationErrors | null
-}
-
 // Состояние избранного
 export interface AddToFavoritesState {
   isSubmitting: boolean
@@ -78,7 +72,6 @@ export interface RootState {
   article: ArticleState
   createArticle: CreateArticleState
   editArticle: EditArticleState
-  settings: SettingsState
   addToFavorites: AddToFavoritesState
   userProfile: UserProfileState
 }

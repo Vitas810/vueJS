@@ -91,11 +91,13 @@ import {
   actionsTypes as authActionTypes,
 } from '@/store/modules/auth'
 import McvValidationErrors from '@/components/ValidationErrors.vue'
+import {getValidationErrors} from '@/helpers/error'
 import {CurrentUser, CurrentUserInput, ValidationErrors} from '@/types/domain'
-import {RootState} from '@/types/store'
 
 interface SettingsData {
   form: CurrentUserInput
+  isSubmitting: boolean
+  validationErrors: ValidationErrors | null
 }
 
 function createEmptySettingsForm(): CurrentUserInput {
@@ -114,19 +116,11 @@ export default Vue.extend({
   data(): SettingsData {
     return {
       form: createEmptySettingsForm(),
+      isSubmitting: false,
+      validationErrors: null,
     }
   },
   computed: {
-    // Флаг отправки формы
-    isSubmitting(): boolean {
-      return (this.$store.state as RootState).settings.isSubmitting
-    },
-
-    // Ошибки валидации формы
-    validationErrors(): ValidationErrors | null {
-      return (this.$store.state as RootState).settings.validationErrors
-    },
-
     // Текущий пользователь
     currentUser(): CurrentUser | null {
       return this.$store.getters[
@@ -139,6 +133,8 @@ export default Vue.extend({
     currentUser: {
       immediate: true,
       handler(currentUser: CurrentUser | null): void {
+        this.validationErrors = null
+
         if (!currentUser) {
           this.form = createEmptySettingsForm()
           return
@@ -157,8 +153,22 @@ export default Vue.extend({
   methods: {
     // Отправка формы настроек
     onSubmit(): void {
-      this.$store.dispatch(authActionTypes.updateCurrentUser, {
-        currentUserInput: {...this.form},
+      this.isSubmitting = true
+      this.validationErrors = null
+
+      const updatePromise = this.$store.dispatch(
+        authActionTypes.updateCurrentUser,
+        {
+          currentUserInput: {...this.form},
+        }
+      ) as Promise<CurrentUser>
+
+      updatePromise.catch((error: unknown) => {
+        this.validationErrors = getValidationErrors(error)
+      })
+
+      updatePromise.finally(() => {
+        this.isSubmitting = false
       })
     },
 
