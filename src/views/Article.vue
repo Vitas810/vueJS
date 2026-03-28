@@ -14,10 +14,14 @@
                 }"
               >
                 <img
+                  v-if="article.author.image"
                   :src="article.author.image"
                   :alt="article.author.username"
                   class="article-page__author-avatar"
                 />
+                <span v-else class="article-page__author-avatar-fallback">
+                  {{ getAuthorInitial(article.author.username) }}
+                </span>
               </router-link>
 
               <div>
@@ -63,7 +67,7 @@
 
         <article v-if="article" class="article-page__body surface-card">
           <p class="article-page__text">{{ article.body }}</p>
-          <mcv-tag-list :tags="article.tagList" />
+          <mcv-tag-list :tags="article.tagList" :max-visible="10" />
         </article>
       </div>
     </section>
@@ -152,6 +156,11 @@ export default Vue.extend({
     },
   },
   methods: {
+    // Первая буква автора
+    getAuthorInitial(authorName: string): string {
+      return authorName.slice(0, 1).toUpperCase()
+    },
+
     // Удаление статьи
     deleteArticle(): void {
       const deletePromise = this.$store.dispatch(

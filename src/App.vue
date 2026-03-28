@@ -1,9 +1,15 @@
 <template>
   <div id="app" class="app-shell">
-    <mcv-topbar />
-    <main>
-      <router-view />
-    </main>
+    <div class="app-shell__background">
+      <span class="app-shell__glow app-shell__glow_primary"></span>
+      <span class="app-shell__glow app-shell__glow_accent"></span>
+    </div>
+    <div class="app-shell__layout">
+      <mcv-topbar />
+      <main class="app-shell__content">
+        <router-view />
+      </main>
+    </div>
   </div>
 </template>
 

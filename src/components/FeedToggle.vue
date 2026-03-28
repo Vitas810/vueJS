@@ -3,7 +3,7 @@
     <div class="feed-tabs__list">
       <router-link
         v-if="isLoggedIn"
-        :to="{name: 'yourFeed'}"
+        :to="getFeedLocation('yourFeed')"
         class="feed-tabs__link"
         :class="{'feed-tabs__link_active': routeName === 'yourFeed'}"
       >
@@ -11,7 +11,7 @@
       </router-link>
 
       <router-link
-        :to="{name: 'globalfeed'}"
+        :to="getFeedLocation('globalfeed')"
         class="feed-tabs__link"
         :class="{'feed-tabs__link_active': routeName === 'globalfeed'}"
       >
@@ -20,7 +20,7 @@
 
       <router-link
         v-if="tagName"
-        :to="{name: 'tag', params: {slug: tagName}}"
+        :to="getFeedLocation('tag', {slug: tagName})"
         class="feed-tabs__link"
         :class="{'feed-tabs__link_active': routeName === 'tag'}"
       >
@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import {Location} from 'vue-router'
 import McvAppIcon from '@/components/AppIcon.vue'
 import {getNamespacedType} from '@/store/helpers/namespacedType'
 import {authModuleName, getterTypes} from '@/store/modules/auth'
@@ -60,6 +61,35 @@ export default Vue.extend({
     // Имя текущего маршрута
     routeName(): string {
       return String(this.$route.name ?? '')
+    },
+  },
+  methods: {
+    // Нормализация query лимита
+    getRouteLimitQueryValue(): string | undefined {
+      const routeLimitQuery = this.$route.query.limit
+
+      if (typeof routeLimitQuery === 'string') {
+        return routeLimitQuery
+      }
+
+      if (Array.isArray(routeLimitQuery)) {
+        return routeLimitQuery[0]
+      }
+
+      return undefined
+    },
+
+    // Ссылка ленты с сохранением выбранного лимита
+    getFeedLocation(name: string, params: Record<string, string> = {}): Location {
+      const limitQueryValue = this.getRouteLimitQueryValue()
+      const nextQuery =
+        limitQueryValue !== undefined ? {limit: limitQueryValue} : undefined
+
+      return {
+        name,
+        params,
+        query: nextQuery,
+      }
     },
   },
 })

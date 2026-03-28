@@ -1,59 +1,114 @@
 <template>
-  <nav class="topbar">
-    <div class="app-container topbar__inner">
+  <aside class="topbar surface-card">
+    <div class="topbar__inner">
       <router-link class="topbar__brand" :to="{name: 'globalfeed'}">
         <span class="topbar__brand-mark">M</span>
-        <span>MediumClone</span>
+        <span class="topbar__brand-content">
+          <span class="topbar__brand-title">MediumClone</span>
+          <span class="topbar__brand-text">Редакционная панель</span>
+        </span>
       </router-link>
 
-      <div class="topbar__nav">
-        <router-link
-          class="topbar__link"
-          :to="{name: 'globalfeed'}"
-          exact
-          active-class="active"
-        >
-          Home
-        </router-link>
+      <nav class="topbar__nav">
+        <div class="topbar__group">
+          <span class="topbar__group-title">Главное меню</span>
 
-        <template v-if="isLoggedIn && currentUser">
           <router-link
+            class="topbar__link"
+            :to="{name: 'globalfeed'}"
+            exact
+            active-class="active"
+          >
+            <span class="topbar__link-text">
+              <span class="topbar__link-title">Обзор</span>
+              <span class="topbar__link-description"
+                >Последние статьи и тренды</span
+              >
+            </span>
+          </router-link>
+
+          <router-link
+            v-if="isLoggedIn"
+            class="topbar__link"
+            :to="{name: 'yourFeed'}"
+            active-class="active"
+          >
+            <span class="topbar__link-text">
+              <span class="topbar__link-title">Ваша лента</span>
+              <span class="topbar__link-description"
+                >Персональный поток и обновления</span
+              >
+            </span>
+          </router-link>
+
+          <router-link
+            v-if="isLoggedIn"
             class="topbar__link topbar__link_accent"
             :to="{name: 'createArticle'}"
             active-class="active"
           >
             <mcv-app-icon name="compose" />
-            <span>New Article</span>
+            <span class="topbar__link-text">
+              <span class="topbar__link-title">Новая статья</span>
+              <span class="topbar__link-description"
+                >Опубликовать новый материал</span
+              >
+            </span>
           </router-link>
 
           <router-link
+            v-if="isLoggedIn"
             class="topbar__link"
             :to="{name: 'settings'}"
             active-class="active"
           >
             <mcv-app-icon name="settings" />
-            <span>Settings</span>
-          </router-link>
-
-          <router-link
-            class="topbar__link"
-            :to="{name: 'userProfile', params: {slug: currentUser.username}}"
-            active-class="active"
-          >
-            <span class="topbar__user">
-              <img :src="currentUser.image" class="topbar__avatar" alt="user" />
-              <span>{{ currentUser.username }}</span>
+            <span class="topbar__link-text">
+              <span class="topbar__link-title">Настройки</span>
+              <span class="topbar__link-description">Управление профилем</span>
             </span>
           </router-link>
-        </template>
+        </div>
 
-        <template v-if="isAnonymous">
+        <div v-if="currentUser && isLoggedIn" class="topbar__group">
+          <span class="topbar__group-title">Рабочая область</span>
+
+          <router-link
+            class="topbar__profile"
+            :to="{name: 'userProfile', params: {slug: currentUser.username}}"
+          >
+            <img
+              v-if="currentUser.image"
+              :src="currentUser.image"
+              class="topbar__avatar"
+              :alt="currentUser.username"
+            />
+            <span v-else class="topbar__avatar-fallback">
+              {{ getUserInitial(currentUser.username) }}
+            </span>
+            <span class="topbar__profile-text">
+              <span class="topbar__profile-name">{{
+                currentUser.username
+              }}</span>
+              <span class="topbar__profile-email">{{ currentUser.email }}</span>
+            </span>
+          </router-link>
+        </div>
+
+        <div v-if="!isLoggedIn" class="topbar__group">
+          <span class="topbar__group-title">Доступ</span>
+
           <router-link
             class="topbar__link"
             :to="{name: 'login'}"
             active-class="active"
           >
-            Sign In
+            <span class="topbar__link-text">
+              <span class="topbar__link-title">Войти</span>
+              <span class="topbar__link-description"
+                >Продолжить работу в кабинете</span
+              >
+            </span>
           </router-link>
 
           <router-link
@@ -61,12 +116,19 @@
             :to="{name: 'register'}"
             active-class="active"
           >
-            Sign Up
+            <span class="topbar__link-text">
+              <span class="topbar__link-title">Регистрация</span>
+              <span class="topbar__link-description"
+                >Создать новый аккаунт</span
+              >
+            </span>
           </router-link>
-        </template>
-      </div>
+        </div>
+
+      </nav>
+
     </div>
-  </nav>
+  </aside>
 </template>
 
 <script lang="ts">
@@ -96,11 +158,11 @@ export default Vue.extend({
       ] as boolean
     },
 
-    // Флаг гостя
-    isAnonymous(): boolean {
-      return this.$store.getters[
-        getNamespacedType(authModuleName, getterTypes.isAnonymous)
-      ] as boolean
+  },
+  methods: {
+    // Первая буква пользователя
+    getUserInitial(username: string): string {
+      return username.slice(0, 1).toUpperCase()
     },
   },
 })
