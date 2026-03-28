@@ -21,7 +21,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {actionTypes} from '@/store/modules/popularTags'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {actionTypes, popularTagsModuleName} from '@/store/modules/popularTags'
 import McvLoading from '@/components/Loading.vue'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
 import {RootState} from '@/types/store'
@@ -49,7 +50,9 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.$store.dispatch(actionTypes.getPopularTags)
+    this.$store.dispatch(
+      getNamespacedType(popularTagsModuleName, actionTypes.getPopularTags)
+    )
   },
 })
 </script>

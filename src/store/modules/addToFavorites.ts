@@ -5,14 +5,16 @@ import {AddToFavoritesState, RootState} from '@/types/store'
 
 /* =============== Типы addToFavorites ============= */
 
-export const mutationsTypes = {
-  addToFavoritesStart: '[addToFavorites] Add to favorites start',
-  addToFavoritesSuccess: '[addToFavorites] Add to favorites success',
-  addToFavoritesFailure: '[addToFavorites] Add to favorites failure',
+export const addToFavoritesModuleName = 'addToFavorites'
+
+export const mutationTypes = {
+  addToFavoritesStart: 'addToFavoritesStart',
+  addToFavoritesSuccess: 'addToFavoritesSuccess',
+  addToFavoritesFailure: 'addToFavoritesFailure',
 } as const
 
 export const actionTypes = {
-  addToFavorites: '[addToFavorites] add to favorites',
+  addToFavorites: 'addToFavorites',
 } as const
 
 const state: AddToFavoritesState = {
@@ -22,13 +24,13 @@ const state: AddToFavoritesState = {
 /* =============== Мутации ============= */
 
 const mutations: MutationTree<AddToFavoritesState> = {
-  [mutationsTypes.addToFavoritesStart](currentState) {
+  [mutationTypes.addToFavoritesStart](currentState) {
     currentState.isSubmitting = true
   },
-  [mutationsTypes.addToFavoritesSuccess](currentState) {
+  [mutationTypes.addToFavoritesSuccess](currentState) {
     currentState.isSubmitting = false
   },
-  [mutationsTypes.addToFavoritesFailure](currentState) {
+  [mutationTypes.addToFavoritesFailure](currentState) {
     currentState.isSubmitting = false
   },
 }
@@ -45,23 +47,24 @@ const actions: ActionTree<AddToFavoritesState, RootState> = {
     {commit},
     {slug, isFavorited}: AddToFavoritesPayload
   ): Promise<Article> {
-    commit(mutationsTypes.addToFavoritesStart)
+    commit(mutationTypes.addToFavoritesStart)
 
     try {
       const article = isFavorited
         ? await addToFavoritesApi.removeFromFavorites(slug)
         : await addToFavoritesApi.addToFavorites(slug)
 
-      commit(mutationsTypes.addToFavoritesSuccess)
+      commit(mutationTypes.addToFavoritesSuccess)
       return article
     } catch (error) {
-      commit(mutationsTypes.addToFavoritesFailure)
+      commit(mutationTypes.addToFavoritesFailure)
       throw error
     }
   },
 }
 
 const addToFavoritesModule: Module<AddToFavoritesState, RootState> = {
+  namespaced: true,
   state,
   actions,
   mutations,

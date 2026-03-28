@@ -86,9 +86,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
 import {
+  actionTypes as authActionTypes,
+  authModuleName,
   getterTypes as authGetterTypes,
-  actionsTypes as authActionTypes,
 } from '@/store/modules/auth'
 import McvValidationErrors from '@/components/ValidationErrors.vue'
 import {getValidationErrors} from '@/helpers/error'
@@ -124,7 +126,7 @@ export default Vue.extend({
     // Текущий пользователь
     currentUser(): CurrentUser | null {
       return this.$store.getters[
-        authGetterTypes.currentUser
+        getNamespacedType(authModuleName, authGetterTypes.currentUser)
       ] as CurrentUser | null
     },
   },
@@ -157,7 +159,7 @@ export default Vue.extend({
       this.validationErrors = null
 
       const updatePromise = this.$store.dispatch(
-        authActionTypes.updateCurrentUser,
+        getNamespacedType(authModuleName, authActionTypes.updateCurrentUser),
         {
           currentUserInput: {...this.form},
         }
@@ -175,7 +177,7 @@ export default Vue.extend({
     // Выход пользователя
     logout(): void {
       const logoutPromise = this.$store.dispatch(
-        authActionTypes.logout
+        getNamespacedType(authModuleName, authActionTypes.logout)
       ) as Promise<void>
 
       logoutPromise.then(() => {

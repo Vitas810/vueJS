@@ -73,8 +73,15 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import {actionTypes as articleActionTypes} from '@/store/modules/article'
-import {getterTypes as authGetterTypes} from '@/store/modules/auth'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {
+  actionTypes as articleActionTypes,
+  articleModuleName,
+} from '@/store/modules/article'
+import {
+  authModuleName,
+  getterTypes as authGetterTypes,
+} from '@/store/modules/auth'
 import McvLoading from '@/components/Loading.vue'
 import McvErrorMessage from '@/components/ErrorMessage.vue'
 import McvTagList from '@/components/Taglist.vue'
@@ -108,7 +115,7 @@ export default Vue.extend({
     // Текущий пользователь
     currentUser(): CurrentUser | null {
       return this.$store.getters[
-        authGetterTypes.currentUser
+        getNamespacedType(authModuleName, authGetterTypes.currentUser)
       ] as CurrentUser | null
     },
 
@@ -127,14 +134,20 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.$store.dispatch(articleActionTypes.getArticle, {
-      slug: this.articleSlug,
-    })
+    this.$store.dispatch(
+      getNamespacedType(articleModuleName, articleActionTypes.getArticle),
+      {
+        slug: this.articleSlug,
+      }
+    )
   },
   watch: {
     articleSlug(slug: string): void {
       if (slug) {
-        this.$store.dispatch(articleActionTypes.getArticle, {slug})
+        this.$store.dispatch(
+          getNamespacedType(articleModuleName, articleActionTypes.getArticle),
+          {slug}
+        )
       }
     },
   },
@@ -142,7 +155,7 @@ export default Vue.extend({
     // Удаление статьи
     deleteArticle(): void {
       const deletePromise = this.$store.dispatch(
-        articleActionTypes.deleteArticle,
+        getNamespacedType(articleModuleName, articleActionTypes.deleteArticle),
         {
           slug: this.articleSlug,
         }

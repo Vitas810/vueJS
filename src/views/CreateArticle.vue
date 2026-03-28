@@ -10,7 +10,11 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvArticleForm from '@/components/ArticleForm.vue'
-import {actionTypes} from '@/store/modules/createArticle'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {
+  actionTypes,
+  createArticleModuleName,
+} from '@/store/modules/createArticle'
 import {Article, ArticleFormValues, ValidationErrors} from '@/types/domain'
 import {RootState} from '@/types/store'
 
@@ -45,9 +49,12 @@ export default Vue.extend({
   methods: {
     // Создание статьи
     onSubmit(articleInput: ArticleFormValues): void {
-      const createPromise = this.$store.dispatch(actionTypes.createArticle, {
-        articleInput,
-      }) as Promise<Article>
+      const createPromise = this.$store.dispatch(
+        getNamespacedType(createArticleModuleName, actionTypes.createArticle),
+        {
+          articleInput,
+        }
+      ) as Promise<Article>
 
       createPromise.then((article) => {
         this.$router.push({name: 'article', params: {slug: article.slug}})

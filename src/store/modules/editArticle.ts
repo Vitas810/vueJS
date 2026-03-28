@@ -6,19 +6,21 @@ import {getValidationErrors} from '@/helpers/error'
 
 /* =============== Типы editArticle ============= */
 
-export const mutationTypes = {
-  updateArticleStart: '[editArticle] Update article start',
-  updateArticleSuccess: '[editArticle] Update article success',
-  updateArticleFailure: '[editArticle] Update article failure',
+export const editArticleModuleName = 'editArticle'
 
-  getArticleStart: '[editArticle] Get article start',
-  getArticleSuccess: '[editArticle] Get article success',
-  getArticleFailure: '[editArticle] Get article failure',
+export const mutationTypes = {
+  updateArticleStart: 'updateArticleStart',
+  updateArticleSuccess: 'updateArticleSuccess',
+  updateArticleFailure: 'updateArticleFailure',
+
+  getArticleStart: 'getArticleStart',
+  getArticleSuccess: 'getArticleSuccess',
+  getArticleFailure: 'getArticleFailure',
 } as const
 
 export const actionTypes = {
-  updateArticle: '[editArticle] Create article',
-  getArticle: '[editArticle] Get article',
+  updateArticle: 'updateArticle',
+  getArticle: 'getArticle',
 } as const
 
 const state: EditArticleState = {
@@ -103,6 +105,7 @@ const actions: ActionTree<EditArticleState, RootState> = {
 }
 
 const editArticleModule: Module<EditArticleState, RootState> = {
+  namespaced: true,
   state,
   actions,
   mutations,

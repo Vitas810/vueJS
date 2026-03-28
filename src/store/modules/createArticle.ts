@@ -6,14 +6,16 @@ import {getValidationErrors} from '@/helpers/error'
 
 /* =============== Типы createArticle ============= */
 
+export const createArticleModuleName = 'createArticle'
+
 export const mutationTypes = {
-  createArticleStart: '[createArticle] Create article start',
-  createArticleSuccess: '[createArticle] Create article success',
-  createArticleFailure: '[createArticle] Create article failure',
+  createArticleStart: 'createArticleStart',
+  createArticleSuccess: 'createArticleSuccess',
+  createArticleFailure: 'createArticleFailure',
 } as const
 
 export const actionTypes = {
-  createArticle: '[createArticle] Create article',
+  createArticle: 'createArticle',
 } as const
 
 const state: CreateArticleState = {
@@ -63,6 +65,7 @@ const actions: ActionTree<CreateArticleState, RootState> = {
 }
 
 const createArticleModule: Module<CreateArticleState, RootState> = {
+  namespaced: true,
   state,
   actions,
   mutations,

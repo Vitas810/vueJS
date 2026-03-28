@@ -59,7 +59,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {actionTypes} from '@/store/modules/feed'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {actionTypes, feedModuleName} from '@/store/modules/feed'
 import McvPagination from '@/components/Pagination.vue'
 import {limit} from '@/helpers/vars'
 import {buildFeedApiUrl} from '@/helpers/feedApiUrl'
@@ -136,7 +137,10 @@ export default Vue.extend({
     fetchFeed(): void {
       const apiUrlWithParams = buildFeedApiUrl(this.apiUrl, this.currentPage)
 
-      this.$store.dispatch(actionTypes.getFeed, {apiUrl: apiUrlWithParams})
+      this.$store.dispatch(
+        getNamespacedType(feedModuleName, actionTypes.getFeed),
+        {apiUrl: apiUrlWithParams}
+      )
     },
   },
 })

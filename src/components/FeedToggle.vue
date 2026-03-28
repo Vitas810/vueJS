@@ -34,7 +34,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import McvAppIcon from '@/components/AppIcon.vue'
-import {getterTypes} from '@/store/modules/auth'
+import {getNamespacedType} from '@/store/helpers/namespacedType'
+import {authModuleName, getterTypes} from '@/store/modules/auth'
 
 export default Vue.extend({
   name: 'McvFeedToggle',
@@ -51,7 +52,9 @@ export default Vue.extend({
   computed: {
     // Флаг авторизации
     isLoggedIn(): boolean {
-      return this.$store.getters[getterTypes.isLoggedIn] as boolean
+      return this.$store.getters[
+        getNamespacedType(authModuleName, getterTypes.isLoggedIn)
+      ] as boolean
     },
 
     // Имя текущего маршрута

@@ -6,14 +6,16 @@ import {getErrorMessage} from '@/helpers/error'
 
 /* =============== Типы userProfile ============= */
 
+export const userProfileModuleName = 'userProfile'
+
 export const mutationTypes = {
-  getUserProfileStart: '[userProfile] Get user profile start',
-  getUserProfileSuccess: '[userProfile] Get user profile Success',
-  getUserProfileFailure: '[userProfile] Get user profile Failure',
+  getUserProfileStart: 'getUserProfileStart',
+  getUserProfileSuccess: 'getUserProfileSuccess',
+  getUserProfileFailure: 'getUserProfileFailure',
 } as const
 
 export const actionTypes = {
-  getUserProfile: '[userProfile] Get user profile',
+  getUserProfile: 'getUserProfile',
 } as const
 
 const state: UserProfileState = {
@@ -70,6 +72,7 @@ const actions: ActionTree<UserProfileState, RootState> = {
 }
 
 const userProfileModule: Module<UserProfileState, RootState> = {
+  namespaced: true,
   state,
   actions,
   mutations,
