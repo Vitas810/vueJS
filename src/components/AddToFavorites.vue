@@ -1,10 +1,12 @@
 <template>
   <button
+    type="button"
     class="app-button app-button_small favorite-button"
     :class="{
       'favorite-button_active': isFavoritesOptimistic,
       'favorite-button_idle': !isFavoritesOptimistic,
     }"
+    :disabled="isSubmittingLikeAction"
     @click="handleLike"
   >
     <mcv-app-icon name="heart" />
@@ -20,7 +22,9 @@ import {
   actionTypes,
   addToFavoritesModuleName,
 } from '@/store/modules/addToFavorites'
+import {authModuleName, getterTypes} from '@/store/modules/auth'
 import {Article} from '@/types/domain'
+import {RootState} from '@/types/store'
 
 interface AddToFavoritesData {
   isFavoritesOptimistic: boolean
@@ -63,11 +67,40 @@ export default Vue.extend({
       this.favoritesCountOptimistic = value
     },
   },
+  computed: {
+    // Флаг авторизации пользователя
+    isLoggedIn(): boolean {
+      return this.$store.getters[
+        getNamespacedType(authModuleName, getterTypes.isLoggedIn)
+      ] as boolean
+    },
+
+    // Флаг отправки запроса лайка
+    isSubmittingLikeAction(): boolean {
+      return (this.$store.state as RootState).addToFavorites.isSubmitting
+    },
+  },
   methods: {
     // Оптимистичное обновление избранного
     handleLike(): void {
+      if (!this.isLoggedIn) {
+        this.$router.push({name: 'register'})
+        return
+      }
+
+      if (this.isSubmittingLikeAction) {
+        return
+      }
+
       const previousFavorited = this.isFavoritesOptimistic
       const previousCount = this.favoritesCountOptimistic
+      const nextFavorited = !previousFavorited
+      const nextCount = nextFavorited
+        ? previousCount + 1
+        : Math.max(previousCount - 1, 0)
+
+      this.isFavoritesOptimistic = nextFavorited
+      this.favoritesCountOptimistic = nextCount
       const favoritePromise = this.$store.dispatch(
         getNamespacedType(addToFavoritesModuleName, actionTypes.addToFavorites),
         {
