@@ -1,5 +1,5 @@
 <template>
-  <div class="feed-tabs">
+  <div v-if="hasVisibleFeedTabs" class="feed-tabs">
     <div class="feed-tabs__list">
       <router-link
         v-if="isLoggedIn"
@@ -8,14 +8,6 @@
         :class="{'feed-tabs__link_active': routeName === 'yourFeed'}"
       >
         Your Feed
-      </router-link>
-
-      <router-link
-        :to="getFeedLocation('globalfeed')"
-        class="feed-tabs__link"
-        :class="{'feed-tabs__link_active': routeName === 'globalfeed'}"
-      >
-        Global Feed
       </router-link>
 
       <router-link
@@ -62,6 +54,11 @@ export default Vue.extend({
     routeName(): string {
       return String(this.$route.name ?? '')
     },
+
+    // Флаг видимости вкладок
+    hasVisibleFeedTabs(): boolean {
+      return this.isLoggedIn || Boolean(this.tagName)
+    },
   },
   methods: {
     // Нормализация query лимита
@@ -73,7 +70,10 @@ export default Vue.extend({
       }
 
       if (Array.isArray(routeLimitQuery)) {
-        return routeLimitQuery[0]
+        const firstRouteLimitQuery = routeLimitQuery[0]
+        return typeof firstRouteLimitQuery === 'string'
+          ? firstRouteLimitQuery
+          : undefined
       }
 
       return undefined

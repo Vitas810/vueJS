@@ -4,7 +4,7 @@
     <mcv-error-message v-if="error" :message="error" />
 
     <div v-if="feed" class="feed-list">
-      <div class="feed-controls">
+      <div class="feed-controls surface-card">
         <span class="feed-controls__label">Карточек на странице</span>
         <div class="feed-controls__list">
           <button
@@ -173,7 +173,7 @@ export default Vue.extend({
     },
 
     // Доступные лимиты карточек
-    feedLimits(): number[] {
+    feedLimits(): FeedLimitOption[] {
       return [...feedLimitOptions]
     },
 
@@ -227,13 +227,16 @@ export default Vue.extend({
     },
 
     // Получение строкового query значения
-    getQueryStringValue(queryValue: string | string[] | undefined): string | undefined {
+    getQueryStringValue(
+      queryValue: string | null | Array<string | null> | undefined
+    ): string | undefined {
       if (typeof queryValue === 'string') {
         return queryValue
       }
 
       if (Array.isArray(queryValue)) {
-        return queryValue[0]
+        const firstQueryValue = queryValue[0]
+        return typeof firstQueryValue === 'string' ? firstQueryValue : undefined
       }
 
       return undefined

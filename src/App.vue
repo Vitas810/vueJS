@@ -5,7 +5,9 @@
       <span class="app-shell__glow app-shell__glow_accent"></span>
     </div>
     <div class="app-shell__layout">
-      <mcv-topbar />
+      <header class="app-shell__header">
+        <mcv-topbar />
+      </header>
       <main class="app-shell__content">
         <router-view />
       </main>
